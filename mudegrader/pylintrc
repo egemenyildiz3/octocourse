@@ -1,0 +1,40 @@
+
+[MASTER]
+max-line-length =  120
+
+ignore-paths = 
+    mmax-line-length =  120
+    igrations
+
+
+
+[MESSAGES CONTROL]
+disable = 
+    line-too-long,
+    unused-import,
+    wildcard-import,
+    relative-import,
+    invalid-name,
+    unused-wildcard-import,
+    wrong-import-position,
+    too-few-public-methods,
+    old-style-class,
+    no-init,
+    no-self-use,
+    unused-argument,
+    too-many-arguments,
+    too-many-instance-attributes,
+    attribute-defined-outside-init,
+    redefined-builtin,
+    too-many-ancestors,
+    arguments-differ,
+    abstract-method,
+    too-many-function-args,
+    assignment-from-none,
+    redefined-outer-name,
+    no-self-argument
+
+
+[VARIABLES]
+max-locals = 25
+max-args = 6

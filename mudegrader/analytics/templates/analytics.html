@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="dashboard">
+        {% include 'partials/assignment_section.html' %}
+        {% include 'partials/exam_section.html' %}
+        {% include 'partials/group_section.html' %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var assignmentLabels = [
+        {% for assignment in assignment_grades.keys %}
+            "{{ assignment }}",
+        {% endfor %}
+    ];
+
+    var assignmentData = [
+        {% for grades in assignment_grades.values %}
+            {{ grades|length }},
+        {% endfor %}
+    ];
+
+    var examLabels = [
+        {% for exam in exam_grades.keys %}
+            "{{ exam }}",
+        {% endfor %}
+    ];
+
+    var examData = [
+        {% for grades in exam_grades.values %}
+            {{ grades|length }},
+        {% endfor %}
+    ];
+
+    var passRateLabels = [
+        {% for assignment in pass_rate.keys %}
+            "{{ assignment }}",
+        {% endfor %}
+    ];
+
+    var passRateData = [
+        {% for rate in pass_rate.values %}
+            {{ rate }},
+        {% endfor %}
+    ];
+
+    var averageGradeLabels = [
+        {% for assignment in assignment_grades.keys %}
+            "{{ assignment }}",
+        {% endfor %}
+    ];
+
+    var averageGradeData = [
+        {% for grade in assignment_grades.values %}
+            {{ grade }},
+        {% endfor %}
+    ];
+
+    var submissionProgressLabels = [
+        {% for assignment in submission_progress.keys %}
+            "{{ assignment }}",
+        {% endfor %}
+    ];
+
+    var submissionProgressData = [
+        {% for progress in submission_progress.values %}
+            {{ progress }},
+        {% endfor %}
+    ];
+
+    var nationalityRateLabels = [
+        {% for nationality in nationality_rates.keys %}
+            "{{ nationality }}",
+        {% endfor %}
+    ];
+
+    var nationalityRateData = [
+        {% for rate in nationality_rates.values %}
+            {{ rate }},
+        {% endfor %}
+    ];
+
+    var participationRateLabels = [
+        {% for exam in exam_participants.keys %}
+            "{{ exam }}",
+        {% endfor %}
+    ];
+
+    var participationRateData = [
+        {% for participants in exam_participants.values %}
+            {{ participants }},
+        {% endfor %}
+    ];
+
+    var groupPerformanceLabels = [
+        {% for group in group_performance.keys %}
+            "{{ group }}",
+        {% endfor %}
+    ];
+
+    var groupPerformanceData = [
+        {% for performance in group_performance.values %}
+            {{ performance }},
+        {% endfor %}
+    ];
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/analytics.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const gridItems = document.querySelectorAll('.grid-item');
+
+            let dragSrcEl = null;
+
+            function handleDragStart(e) {
+                dragSrcEl = this;
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/html', this.innerHTML);
+                this.classList.add('dragging');
+            }
+
+            function handleDragOver(e) {
+                if (e.preventDefault) {
+                    e.preventDefault(); // Allows us to drop.
+                }
+                e.dataTransfer.dropEffect = 'move';
+                return false;
+            }
+
+            function handleDragEnter(e) {
+                this.classList.add('over');
+            }
+
+            function handleDragLeave(e) {
+                this.classList.remove('over');
+            }
+
+            function handleDrop(e) {
+                if (e.stopPropagation) {
+                    e.stopPropagation();
+                }
+
+                if (dragSrcEl !== this) {
+                    // Swap the grid positions
+                    const srcGridColumn = dragSrcEl.style.gridColumn;
+                    const srcGridRow = dragSrcEl.style.gridRow;
+                    const targetGridColumn = this.style.gridColumn;
+                    const targetGridRow = this.style.gridRow;
+
+                    dragSrcEl.style.gridColumn = targetGridColumn;
+                    dragSrcEl.style.gridRow = targetGridRow;
+                    this.style.gridColumn = srcGridColumn;
+                    this.style.gridRow = srcGridRow;
+                }
+
+                return false;
+            }
+
+            function handleDragEnd(e) {
+                gridItems.forEach(function (item) {
+                    item.classList.remove('over', 'dragging');
+                });
+            }
+
+            gridItems.forEach(function (item) {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragenter', handleDragEnter);
+                item.addEventListener('dragover', handleDragOver);
+                item.addEventListener('dragleave', handleDragLeave);
+                item.addEventListener('drop', handleDrop);
+                item.addEventListener('dragend', handleDragEnd);
+            });
+        });
+
+    </script>
+{% endblock %}

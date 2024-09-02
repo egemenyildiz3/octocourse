@@ -1,0 +1,72 @@
+<style>
+    #file-pick-button {
+        background:transparent;
+        width: 150%;
+        padding: 0;
+        border: none;
+        border-radius: unset;
+        {#display: inline-block;#}
+
+    }
+
+    .assignment-unit-grid-field {
+        height: 100%;
+        white-space: normal; /* Allow text to wrap */
+        word-wrap: break-word; /* Break long words */
+        overflow-wrap: break-word; /* Break long words */
+        max-width: 100%; /* Ensure the text will wrap within the grid item */
+        grid-row: 1 / -1;
+        {#display: flex;#}
+        {#justify-content: center;#}
+        {#align-items: center;#}
+        {#word-wrap: break-word;#}
+        {#white-space: normal; /* Allow text to wrap */#}
+
+    }
+
+
+</style>
+
+<div class="assignment-unit-grid-field" style="grid-column: 1;">
+    <label for="unit_name">File Name:</label>
+    {{ unit.name }}
+</div>
+
+<div class="assignment-unit-grid-field" style="grid-column: 2;">
+    <label for="unit_file">File:</label>
+    <input id="file-pick-button" type="file" name="units-{{ forloop.counter0 }}-file">
+    {% if unit.file %}
+        <span>Uploaded</span>
+    {% else %}
+        No file uploaded
+    {% endif %}
+</div>
+<div class="assignment-unit-grid-field" style="grid-column: 3;">
+    <label for="unit_type">Type:</label>
+    <select name="units-{{ forloop.counter0 }}-type">
+        <option value="master" {% if unit.type == 'master' %} selected {% endif %}>Auto-Graded</option>
+        <option value="non_master" {% if unit.type == 'non_master' %} selected {% endif %}>Manually Graded</option>
+    </select>
+</div>
+<div class="assignment-unit-grid-field" style="grid-column: 4;">
+    <label for="unit_total_points">Total Points:</label>
+    <input type="number" name="units-{{ forloop.counter0 }}-total_points" value="{{ unit.total_points }}">
+</div>
+<div class="assignment-unit-grid-field" style="grid-column: 5;">
+    <label for="unit_number_of_tasks">Number of Tasks:</label>
+    <input type="number" name="units-{{ forloop.counter0 }}-number_of_tasks" value="{{ unit.number_of_tasks }}" onchange="updateTasks({{ forloop.counter0 }}, this.value)">
+</div>
+<div class="tasks assignment-unit-grid-field" id="tasks-container-{{ forloop.counter0 }}">
+    {% for task in unit.tasks_set.all %}
+        <div class="task">
+            <input type="hidden" name="units-{{ forloop.parentloop.counter0 }}-tasks-{{ forloop.counter0 }}-id" value="{{ task.id }}">
+            <label for="task_{{ forloop.counter0 }}_max_score">Task {{ forloop.counter }} Max Score:</label>
+            <input type="number" name="units-{{ forloop.parentloop.counter0 }}-tasks-{{ forloop.counter0 }}-max_score" value="{{ task.max_score }}">
+            <label for="task_{{ forloop.counter0 }}_is_auto_graded">Auto Graded:</label>
+            <input type="checkbox" name="units-{{ forloop.parentloop.counter0 }}-tasks-{{ forloop.counter0 }}-is_auto_graded" value="true" {% if task.is_auto_graded %} checked {% endif %}>
+        </div>
+    {% endfor %}
+</div>
+<div class="assignment-unit-grid-field" style="grid-column: 6;">
+    <button type="button" class="deleteAssignmentUnitButton" data-unit-id="{{ unit.id }}">Delete</button>
+</div>

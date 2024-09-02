@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+    {% load static  %}
+    <script>
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this student?");
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="content-box">
+        <div class="content-header">
+            <h1>Student List</h1>
+            <div>
+                <a href="{% url 'send_summary_report_feedback' course_id %}" class="mude-button danger">Send Summary Report</a>
+                <a href="#" class="mude-button data">Kiril's Import</a>
+                <a href="{% url 'export_all_students_for_selected_course' %}" class="mude-button data">Export</a>
+                <a href="{% url 'add_student' %}" class="mude-button safe">
+                    {# plus #}
+                    <small><i class="fa-solid fa-plus"></i></small>Student
+                </a>
+            </div>
+        </div>
+
+        <div class="search-filter-container">
+            <!-- Search Form -->
+            <div class="search-bar">
+                <form action="{% url 'search_students' %}" method="GET">
+                    <input type="text" name="search_query" placeholder="Search students...">
+                    <button type="submit" class="mude-button safe">Search</button>
+                </form>
+            </div>
+            
+            <!-- Filter Form -->    
+            <div class="filter-bar">
+                <form action="{% url 'filter_students' %}" method="GET">
+                    <select name="filter">
+                        <option value="enrollment_year">Enrollment Year</option>
+                        <option value="program">Program</option>
+                        <option value="msc_track">MSC Track</option>
+                        <option value="self_assessed_skill">Self-Assessed Skill</option>
+                        <option value="nationality_type">Nationality Type</option>
+                        <option value="start_year_in_mude">Start Year in Mude</option>
+                    </select>
+                    <input type="text" name="value" placeholder="Enter value...">
+                    <button type="submit" class="mude-button safe" >Filter</button>
+                </form>
+            </div>
+        </div>
+        <div class="scrollable-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>NetID</th>
+                    <th>Email</th>
+                    <th>Enrollment Year</th>
+                    <th>Program</th>
+                    <th>MSC Track</th>
+                    <th>Self-Assessed Skill</th>
+                    <th>Start Year in Mude</th>
+                    <th>Brightspace ID</th>
+                    <th>Gitlab ID</th>
+                    <th>Public SSH Key</th>
+                    <th>Tags</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td>{{ student.first_name }}</td>
+                        <td>{{ student.last_name }}</td>
+                        <td>{{ student.net_id }}</td>
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.enrollment_year }}</td>
+                        <td>{{ student.program }}</td>
+                        <td>{{ student.msc_track }}</td>
+                        <td>{{ student.self_assessed_skill }}</td>
+                        <td>{{ student.start_year_in_mude }}</td>
+                        <td>{{ student.brightspace_id }}</td>
+                        <td>{{ student.gitlab_id }}</td>
+                        <td>{{ student.public_ssh_key }}</td>
+                        <td>
+                            {% for tag in student.tags.all %}
+                                {{ tag.to_html }}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <a href="{% url 'student_details' student.id %}" class="mude-button safe">Details</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'delete_student' student.id %}" class="mude-button danger" onclick="return confirmDelete();">Delete</a>
+                        </td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {# pop up #}
+    {% url "import_students_csv" as import_url %}
+    {% include "drag_and_drop_pop_up.html" with import_url=import_url %}
+
+{% endblock %}
+    

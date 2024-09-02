@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="content-box">
+        <div class="content-header">
+            <h1>Add New Tags</h1>
+            <div>
+                <a href="{% url 'course_details' course.id %}" class="mude-button back">Back</a>
+            </div>
+        </div>
+
+        <div class="detail-container scrollable-table">
+            <div>
+                <h2>Existing Tags:</h2>
+                <ul>
+                    {% for tag in tags %}
+                        <li>
+                            <div>{{ tag.to_html }}</div>
+                            <form action="{% url 'delete_tag' course.id tag.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="mude-button danger">Delete</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Form to add new tag -->
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="mude-button safe">Create</button>
+                <a href="{% url 'course_details' course.id %}" class="mude-button danger">Cancel</a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

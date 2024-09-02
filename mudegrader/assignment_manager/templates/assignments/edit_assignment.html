@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/notebookjs@0.3.1/dist/notebook.min.js"></script>
+<script src="{% static 'js/edit_assignment.js' %}"></script>
+<script src="{% static 'js/date_picker_and_form_validation.js' %}"></script>
+<script src="{% static 'js/file_handling.js' %}"></script>
+<script src="{% static 'js/assignment_unit_management.js' %}"></script>
+<script src="{% static 'js/event_listeners.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="content-box" id="box1">
+    {% include 'assignments/partials/edit_assignment_header.html' %}
+    <div class="detail-container scrollable-table">
+        <form method="post" enctype="multipart/form-data" id="assignmentForm" data-assignment-id="{{ form.instance.id }}">
+            {% csrf_token %}
+            {% include 'assignments/partials/edit_assignment_form.html' %}
+        </form>
+        
+    </div>
+
+    <div class="header-buttons" style="margin-top: 30px">
+        <div>
+            <button type="button" class="mude-button safe" id="addAssignmentUnitButton"><small><i class="fa-solid fa-plus"></i></small> Assignment Unit</button>
+            <button type="button" class="mude-button data" id="uploadZipButton">Upload ZIP File</button>
+        </div>
+        <div>
+            {% include "form_save_button.html" %}
+            <a href="{% url 'assignment_details' form.instance.id %}" class="mude-button danger">Cancel</a>
+        </div>
+    </div>
+</div>
+
+<div class="content-box" id="box2">
+    {% include 'assignments/partials/file_previews.html' %}
+</div>
+
+<!-- Modal for uploading ZIP file -->
+{% url "import_zip_assignment_units" form.instance.id as import_zip_url %}
+{% include "drag_and_drop_zip_pop_up.html" with import_url=import_zip_url title="Upload Assignment Units ZIP" %}
+{% endblock %}

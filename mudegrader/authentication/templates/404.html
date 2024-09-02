@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found{% endblock %}
+
+{% block content %}
+<div class="content-box">
+    <h1>Oops! Page Not Found</h1>
+    <p>We're sorry, but the page you were looking for doesn't exist.</p>
+    <p>You might want to check the URL for errors or <a href="{% url 'course_list' %}">go back to the homepage</a>.</p>
+</div>
+{% endblock %}

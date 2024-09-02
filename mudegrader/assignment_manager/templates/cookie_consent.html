@@ -1,0 +1,8 @@
+{% load static %}
+
+<div id="cookie-consent-banner" style="position: fixed; bottom: 0; width: 100%; background: #333; color: white; padding: 10px; text-align: center; display: none;">
+    <p>We use cookies to ensure you get the best experience on our website. <a href="{% url 'privacy_policy' %}" style="color: #4CAF50;">Learn more</a></p>
+    <button id="accept-cookies" class="safe-button">Accept</button>
+</div>
+
+<script src="{% static 'js/cookie-consent.js' %}"></script>

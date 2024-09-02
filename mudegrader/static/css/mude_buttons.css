@@ -1,0 +1,134 @@
+
+
+
+
+
+/* TODO (jasper): Rename? */
+/*
+    general button class
+    an additional color styling class should be added when using this
+*/
+.mude-button {
+    color: white;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    border-radius: 5px;
+    border: none;
+}
+
+/* extra margins in specific places */
+.search-filter-container .mude-button {
+    margin-left: 5px;
+}
+
+/* extra margins in specific places */
+#button-list-item .mude-button {
+     margin-left: 5px;
+ }
+
+/* safe button coloring */
+
+.safe {
+    background-color: #4CAF50;
+}
+
+.safe:hover {
+    background-color: #45a049;
+}
+
+.safe:active {
+    background-color: #378c3b;
+}
+
+/* danger button coloring */
+
+.danger {
+    background-color: #fa385d;
+}
+
+.danger:hover, .log-out-button:hover {
+    background-color: #e33153;
+}
+
+.danger:active, .log-out-button:active {
+    background-color: #c92342;
+}
+
+/* back button coloring */
+
+.back {
+    background-color: #969696;
+}
+
+.back:hover {
+    background-color: #868686;
+}
+
+.back:active {
+    background-color: #737272;
+}
+
+/* email button coloring */
+
+.email {
+    background-color: #3ac5fc;
+}
+
+.email:hover {
+    background-color: #1ebefd;
+}
+
+.email:active {
+    background-color: #0eb5fa;
+}
+
+/* publish button coloring */
+
+.publish {
+    background-color: #4169E1;
+}
+
+.publish:hover {
+    background-color: #355fde;
+}
+
+.publish:active {
+    background-color: #3a5ab6;
+}
+
+/* data button coloring */
+
+.data {
+    background-color: #fca420;
+}
+
+.data:hover {
+    background-color: #ec9a1f;
+}
+
+.data:active {
+    background-color: #dc8f1d;
+}
+
+
+.big-button {
+    display: block;
+    width: 200px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 10px;
+    text-align: center;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.big-button:hover {
+    background-color: #0056b3;
+}

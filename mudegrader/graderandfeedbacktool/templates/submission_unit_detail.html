@@ -1,0 +1,449 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    /* Enhance overall container styling */
+    .container {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    /* Enhance column styling */
+    .column {
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-height: 85vh; /* Set the fixed height */
+        position: relative; /* Added for overlay positioning */
+    }
+
+    /* Style header buttons */
+    .navigation-buttons a {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    .navigation-buttons a:hover {
+        background-color: #0056b3;
+    }
+
+    #column-1 {
+        flex: 0 0 63%;
+        overflow-y: auto;
+    }
+    #column-3 {
+        flex: 0 0 37%;
+        overflow-y: auto;
+    }
+    /* Style iframe for file preview */
+    #fileViewerIframe {
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        margin-top: 20px;
+        background-color: #f9f9f9;
+    }
+
+    /* Style the full screen button */
+    #fullScreenButton {
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    #fullScreenButton:hover {
+        background-color: #0056b3;
+    }
+
+    /* Style the submission form */
+    #submissionUnitForm, #gradeForm {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        margin-top: 20px;
+    }
+
+    /* Style input fields and textarea */
+    #submissionUnitForm input, #submissionUnitForm textarea, 
+    #gradeForm input, #gradeForm textarea {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    /* Style submit buttons */
+    #submissionUnitForm button, #gradeForm button {
+        background-color: #28a745;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    #submissionUnitForm button:hover, #gradeForm button:hover {
+        background-color: #218838;
+    }
+
+    /* Style list items in the task grades form */
+    #gradeForm ul li {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+    }
+
+    /* Style task divider */
+    .task-divider {
+        border-top: 1px solid #ccc;
+        margin: 20px 0;
+    }
+
+    /* Style automated score display */
+    .automated-score {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .toggle-wrapper {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 10px; /* Optional: Adjust margin as needed */
+        width: 100%; /* Increase width to 100% of the container */
+        box-sizing: border-box; /* Ensure padding is included in the width */
+    }
+
+    .toggle-instruction {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        text-align: center;
+        color: #333;
+        padding: 30px;
+        background-color: rgba(209, 99, 35, 0.2); /* Green with 20% opacity */
+        border-radius: 4px; /* Rounded corners for the block */
+        display: block;
+        position: relative;
+    }
+
+    .toggle-switch {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        width: 40px;
+        height: 20px;
+        background-color: #5f5151;
+        border-radius: 20px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #e21010;
+        transition: .4s;
+        border-radius: 20px;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+        background-color: rgb(249, 244, 244);
+        border-radius: 50%;
+        transition: .4s;
+    }
+
+    input:checked + .toggle-slider {
+        background-color: #28a745;
+    }
+
+    input:checked + .toggle-slider:before {
+        transform: translateX(20px);
+    }
+
+</style>
+
+    <div class="container">
+        <div class="column" id="column-1">
+            <div class="header-buttons">
+                <a href="{% url 'submission_view' submission_unit.submission.id %}" class="mude-button back">Go Back to Submission Folder</a>
+            </div>
+            <h2>File Preview</h2>
+            <iframe id="fileViewerIframe" class="styled-iframe" style="width: 1000px; height: 1000px; border: none; margin-bottom: 20px;" src="{{ preview_file_path }}#toolbar=0"></iframe>
+            <div id="markdownPreview" style="display: none; width: 800px; height: 800px; overflow: auto; margin-bottom: 20px;"></div>
+            <button id="fullScreenButton" class="navigation-buttons">Preview in Full Screen</button>            
+        </div>
+
+        <div class="column" id="column-3">
+            <div>
+                <h2>Submission Unit Grade</h2>
+                <div class="toggle-instruction">
+                    <span>To grade at the submission unit level, switch on the toggle. Otherwise, keep it off.</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleSubmissionUnitForm">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <form method="post" id="submissionUnitForm">
+                    {% csrf_token %}
+                    {{ submission_unit_form.as_p }}
+                    <input type="hidden" name="submission_unit_form_enabled" id="submission_unit_form_enabled" value="0">
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                        <button type="submit">Save Submission Unit Level Grade</button>
+                        <a href="{% url 'reset_submission_unit_level_grades' submission_unit_id %}" class="mude-button danger">Reset Inputs</a>
+                    </div>
+                </form>
+            </div>
+
+            <div>
+                <h2>Task Grades</h2>
+                <div class="toggle-instruction">
+                    <span>To grade at the Task Level, switch on the toggle, Otherwise, keep it off</span>
+                    <!-- Toggle switch for task grades form -->
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleTaskGradesForm">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <form method="post" id="gradeForm">
+                    {% csrf_token %}
+                    <ul>
+                        {% for task_grade in task_grades %}
+                            <li style="margin-bottom: 20px;">
+                                <label for="feedback_{{ task_grade.id }}">Task {{ task_grade.question_id }}</label>
+                                <span>Maximum points : {{task_grade.max_points}}</span>
+                                {% if not task_grade.is_auto_graded %}
+                                    <div style="margin-bottom: 10px;">
+                                        <input type="number" name="grade_{{ task_grade.id }}" id="grade_{{ task_grade.id }}" placeholder="Enter grade" value="{{ task_grade.points_received }}" required style="width: 100px;" data-max-points="{{ task_grade.max_points }}">
+                                    </div>
+                                {% else %}
+                                    <div style="margin-bottom: 10px;">
+                                        <span id="grade_{{ task_grade.id }}" class="automated-score">
+                                            Automated Points: {{ task_grade.points_received }}
+                                        </span>
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    <input type="text" name="feedback_{{ task_grade.id }}" id="feedback_{{ task_grade.id }}" placeholder="Feedback" value="{{ task_grade.feedback.feedback_text }}" required style="width: 450px; height: 50px;">
+                                </div>
+                                <hr class="task-divider">
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <input type="hidden" name="grade_form_enabled" id="grade_form_enabled" value="0">
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                        <button type="submit" style="padding-bottom: 10px;">Save Task Grades</button>
+                        <a href="{% url 'reset_task_grade_values' submission_unit_id %}" class="mude-button danger">Reset Inputs</a>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                        {% if previous_submission_unit_id %}
+                            <div class="navigation-buttons" style="padding-top: 10px;">
+                                <a href="{% url 'submission_unit_detail' previous_submission_unit_id %}" class="safe-button">Previous Submission Unit</a>
+                            </div>
+                        {% endif %}
+                        {% if next_submission_unit_id %}
+                            <div class="navigation-buttons" style="padding-top: 10px;">
+                                <a href="{% url 'submission_unit_detail' next_submission_unit_id %}" class="safe-button">Next Submission Unit</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+
+<script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var iframe = document.getElementById('fileViewerIframe');
+    var markdownPreview = document.getElementById('markdownPreview');
+    var fullScreenButton = document.getElementById('fullScreenButton');
+    var isMarkdown = false;
+    var previewContent = '';
+    const toggleSubmissionUnitForm = document.getElementById('toggleSubmissionUnitForm');
+    const toggleTaskGradesForm = document.getElementById('toggleTaskGradesForm');
+    const submissionUnitForm = document.getElementById('submissionUnitForm');
+    const gradeForm = document.getElementById('gradeForm');
+    const submissionUnitFormEnabledInput = document.getElementById('submission_unit_form_enabled');
+    const gradeFormEnabledInput = document.getElementById('grade_form_enabled');
+    const saveOverallGradeButton = submissionUnitForm.querySelector('button[type="submit"]'); // Select the Save Overall Grade button
+    const saveTaskGradesButton = gradeForm.querySelector('button[type="submit"]'); // Select the Save Task Grades button
+    // Initial calls to set initial state based on checkboxes
+    // toggleTaskGradesForm.checked = true; // Task Grades form is enabled by default
+    // toggleSubmissionUnitForm.checked = false; // Submission Unit form is disabled by default
+
+    // Load toggle state from localStorage
+    const savedSubmissionUnitFormState = localStorage.getItem('toggleSubmissionUnitFormState');
+    const savedTaskGradesFormState = localStorage.getItem('toggleTaskGradesFormState');
+
+    // Set initial state based on saved values or defaults
+    if (savedSubmissionUnitFormState === 'true') {
+        toggleSubmissionUnitForm.checked = true;
+        toggleTaskGradesForm.checked = false;
+    } else if (savedTaskGradesFormState === 'true') {
+        toggleTaskGradesForm.checked = true;
+        toggleSubmissionUnitForm.checked = false;
+    } else {
+        toggleTaskGradesForm.checked = true; // Default state
+        toggleSubmissionUnitForm.checked = false; // Default state
+    }
+
+    // Function to toggle submission unit form disabled state
+    function toggleSubmissionUnitFormDisabled() {
+        const inputs = gradeForm.querySelectorAll('input, textarea, button');
+        inputs.forEach(element => {
+            element.disabled = toggleSubmissionUnitForm.checked;
+        });
+
+        // Update hidden input value
+        submissionUnitFormEnabledInput.value = toggleSubmissionUnitForm.checked ? "1" : "0";
+
+        // Disable Save Task Grades button if toggleSubmissionUnitForm is checked
+        saveTaskGradesButton.disabled = toggleSubmissionUnitForm.checked;
+
+        // Save state to localStorage
+        localStorage.setItem('toggleSubmissionUnitFormState', toggleSubmissionUnitForm.checked);
+
+        // Ensure only one switch is turned on at a time
+        if (toggleSubmissionUnitForm.checked) {
+            toggleTaskGradesForm.checked = false;
+            toggleTaskGradesFormDisabled();
+        }
+    }
+
+    // Function to toggle task grades form disabled state
+    function toggleTaskGradesFormDisabled() {
+        const inputs = submissionUnitForm.querySelectorAll('input, textarea, button');
+        inputs.forEach(element => {
+            element.disabled = toggleTaskGradesForm.checked;
+        });
+
+        // Update hidden input value
+        gradeFormEnabledInput.value = toggleTaskGradesForm.checked ? "1" : "0";
+
+        // Disable Save Overall Grade button if toggleTaskGradesForm is checked
+        saveOverallGradeButton.disabled = toggleTaskGradesForm.checked; // New line
+
+        // Save state to localStorage
+        localStorage.setItem('toggleTaskGradesFormState', toggleTaskGradesForm.checked);
+
+        // Ensure only one switch is turned on at a time
+        if (toggleTaskGradesForm.checked) {
+            toggleSubmissionUnitForm.checked = false;
+            toggleSubmissionUnitFormDisabled();
+        }
+    }
+
+    toggleSubmissionUnitFormDisabled();
+    toggleTaskGradesFormDisabled();
+
+    // Event listener for submission unit form toggle switch
+    toggleSubmissionUnitForm.addEventListener('change', function() {
+        toggleSubmissionUnitFormDisabled();
+        if (!toggleSubmissionUnitForm.checked) {
+            toggleTaskGradesForm.checked = true;
+            toggleTaskGradesFormDisabled();
+        }
+    });
+
+    // Event listener for task grades form toggle switch
+    toggleTaskGradesForm.addEventListener('change', function() {
+        toggleTaskGradesFormDisabled();
+        if (!toggleTaskGradesForm.checked) {
+            toggleSubmissionUnitForm.checked = true;
+            toggleSubmissionUnitFormDisabled();
+        }
+    });
+
+    fullScreenButton.addEventListener('click', function() {
+        if (isMarkdown) {
+            var newWindow = window.open('', '_blank');
+            newWindow.document.write('<html><head><title>Markdown Preview</title></head><body>');
+            newWindow.document.write(previewContent);
+            newWindow.document.write('</body></html>');
+            newWindow.document.close();
+        } else {
+            window.open(iframe.src, '_blank');
+        }
+    });
+
+    document.getElementById('gradeForm').addEventListener('submit', function(event) {
+        var inputs = this.getElementsByTagName('input');
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].value === '') {
+                event.preventDefault();
+                alert('Not all fields are completed');
+                return;
+            }
+        }
+    });
+
+    var taskGradesInputs = document.querySelectorAll('input[type="number"]');
+    taskGradesInputs.forEach(function(input) {
+        input.addEventListener('input', function(event) {
+            var maxPoints = parseFloat(this.getAttribute('data-max-points'));
+            var value = parseFloat(this.value);
+            if (isNaN(value) || value > maxPoints) {
+                this.setCustomValidity("Grade cannot be greater than " + maxPoints + ". Please try again.");
+            } else {
+                this.setCustomValidity("");
+            }
+        });
+    });
+
+    // renders a markdown using showdown library
+    if (iframe.src.endsWith(".md") || iframe.src.endsWith(".markdown")) {
+        isMarkdown = true;
+        fetch(iframe.src)
+            .then(response => response.text())
+            .then(data => {
+                var converter = new showdown.Converter();
+                previewContent = converter.makeHtml(data);
+                iframe.style.display = 'none';
+                markdownPreview.style.display = 'block';
+                markdownPreview.innerHTML = previewContent;
+            })
+            .catch(error => console.error('Error loading Markdown file:', error));
+    }
+
+});
+</script>
+{% endblock %}

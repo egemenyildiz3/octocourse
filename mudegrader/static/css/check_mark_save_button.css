@@ -1,0 +1,31 @@
+
+.hide {
+    display: none;
+}
+
+/* Class to show the message */
+.show {
+    display: inline-block;
+    animation: fadeInOut 2s;
+}
+
+/* */
+.show-instant {
+    display: inline-block;
+}
+
+#check-mark {
+    width: 40px;
+    height: 15px;
+    margin-top: 0;
+}
+
+#save-text {
+    width: 40px;
+    height: 16px;
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}

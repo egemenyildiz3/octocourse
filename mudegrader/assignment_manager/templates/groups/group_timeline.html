@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="content-box" id="box1">
+        {% include "timelines/event_history.html" %}
+    </div>
+    <div class="content-box" id="box2">
+        {% include "timelines/commit_history.html" %}
+    </div>
+{% endblock %}

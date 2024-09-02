@@ -1,0 +1,73 @@
+<div class="grid-item draggable" id="grades-assignments" style="grid-row:1;grid-column:1;" draggable="true">
+    <h2>Assignments</h2>
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'AssignmentOverview')">Overview</button>
+        <button class="tablinks" onclick="openTab(event, 'AssignmentGrades')">Grade Distribution</button>
+        <button class="tablinks" onclick="openTab(event, 'AssignmentPassRate')">Pass Rate</button>
+        <button class="tablinks" onclick="openTab(event, 'AssignmentAverage')">Average Grade</button>
+        <button class="tablinks" onclick="openTab(event, 'AssignmentGradingProgress')">Grading Progress</button>
+    </div>
+    <div id="AssignmentOverview" class="tab-content scrollable-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Points</th>
+                    <th style="width: 70px">Assignment Units</th>
+                    <th style="width: 80px">Submissions (amount)</th>
+                    <th>Pass (%)</th>
+                    <th style="width: 65px">Grading Completed (%)</th>
+                    <th>Max Grade</th>
+                    <th>Min. Grade</th>
+                    <th>Std. Dev.</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for assignment in assignment_overview %}
+                    <tr>
+                        <td>{{ assignment.name }}</td>
+                        <td>{{ assignment.type }}</td>
+                        <td>{{ assignment.points }}</td>
+                        <td>{{ assignment.assignment_units }}</td>
+                        <td>{{ assignment.repository_submissions }}</td>
+                        <td>{{ assignment.pass_fail_percentages }}</td>
+                        <td>{{ assignment.grading_status }}</td>
+                        <td>{{ assignment.max_grade }}</td>
+                        <td>{{ assignment.min_grade }}</td>
+                        <td>{{ assignment.std_dev }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+    </div>
+    <div id="AssignmentGrades" class="tab-content">
+        <select id="assignmentDropdown" class="dropdown">
+            {% for assignment in assignment_grades.keys %}
+                <option value="{{ assignment }}">{{ assignment }}</option>
+            {% endfor %}
+        </select>
+        <h3>Grade Distribution for <span id="selected-assignment">Select an Assignment</span></h3>
+        <div class="canvas-container">
+            <canvas id="assignmentChart"></canvas>
+        </div>
+    </div>
+    <div id="AssignmentPassRate" class="tab-content">
+        <h3>Pass Rate for All Assignments</h3>
+        <div class="canvas-container">
+            <canvas id="passRateChart"></canvas>
+        </div>
+    </div>
+    <div id="AssignmentAverage" class="tab-content">
+        <h3>Average Grade per Assignment</h3>
+        <div class="canvas-container">
+            <canvas id="averageGradeChart"></canvas>
+        </div>
+    </div>
+    <div id="AssignmentGradingProgress" class="tab-content">
+        <h3>Grading Progress for All Assignments</h3>
+        <div class="canvas-container">
+            <canvas id="submissionProgressChart"></canvas>
+        </div>
+    </div>
+</div>

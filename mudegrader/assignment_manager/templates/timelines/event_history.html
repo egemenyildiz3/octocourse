@@ -1,0 +1,35 @@
+<div class="content-header">
+    <h2>Event History</h2>
+    <div>
+        <a href="{% url 'student_details' student_id %}" class="mude-button back">Back</a>
+    </div>
+</div>
+<div class="scrollable-table">
+    <table>
+        <thead>
+        <tr>
+            <th style="width: 80px">Event Title</th>
+            <th style="width: 80px">User</th>
+            <th>Text</th>
+            <th style="width: 140px">Date</th>
+        </tr>
+        </thead>
+        <tbody >
+        {% for event in event_history %}
+            <tr>
+                <td>{{ event.name }}</td>
+                <td>{{ event.user }}</td>
+                <td id = 'student-details'>{{ event.text }}</td>
+                <td>{{ event.date | date:"H:i:s d/m/Y" }}</td>
+            </tr>
+        {%endfor%}
+        </tbody>
+    </table>
+</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const studentDetailsDiv = document.getElementById('student-details');
+            studentDetailsDiv.innerHTML = studentDetailsDiv.innerHTML.replace(/\n/g, '<br>');
+        });
+    </script>

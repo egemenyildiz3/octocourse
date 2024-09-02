@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="content-box">
+        <div class="content-header">
+            <h1>Exam List for {{ student.first_name }} {{ student.last_name }}</h1>
+            <div>
+                <a href="{% url 'student_details' student.id %}" class="mude-button back">Back</a>
+            </div>
+        </div>
+
+        <div class="exam-list">
+            {% if exams %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Exam Name</th>
+                            <th>Date</th>
+                            <th>Attempt</th>
+                            <th>Grade</th>
+                            <th>Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for exam in exams %}
+                            <tr>
+                                <td>{{ exam.exam_metadata.name }}</td>
+                                <td>{{ exam.exam_metadata.exam_date }}</td>
+                                <td>{{ exam.exam_metadata.attempt }}</td>
+                                <td>{{ exam.grade }}</td>
+                                <td>{{ exam.exam_metadata.comments }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No exams found for this student.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

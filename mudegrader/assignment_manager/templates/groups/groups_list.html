@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+    <script>
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this group?");
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="content-box">
+
+        <div class="content-header">
+            <h1>Group List</h1>
+            <div>
+{#                <a href="#" class="mude-button data">Import</a>#}
+{#                <a href="#" class="mude-button data">Export</a>#}
+{#                <a href="#" class="mude-button publish">Retrieve Groups</a>#}
+                <a href="{% url 'add_group' %}" class="mude-button safe">
+                    {# plus #}
+                    <small><i class="fa-solid fa-plus"></i></small>Group
+                </a>
+            </div>
+        </div>
+
+        <!-- Search and Filter Forms -->
+        <div class="search-filter-container">
+            <!-- Search Form -->
+            <div class="search-bar">
+                <form action="{% url 'search_groups' %}" method="GET">
+                    <input type="text" name="search_query" placeholder="Search groups...">
+                    <button type="submit" class="mude-button safe">Search</button>
+                </form>
+            </div>
+
+            <!-- Filter Form -->
+            <div class="filter-bar" >
+                <form action="{% url 'filter_groups' %}" method="GET">
+                    <select name="filter">
+                        <option value="name">Name</option>
+                        <option value="creation_date">Creation Date</option>
+                        <option value="assignment_id" {% if filter_param == 'assignment' %}selected{% endif %}>Assignment</option>
+                        <!-- Add more options for other attributes as needed -->
+                    </select>
+                    <input type="text" name="value" placeholder="Enter value...">
+                    <button type="submit" class="mude-button safe">Filter</button>
+                </form>
+            </div>
+        </div>
+
+        
+
+        <div class="scrollable-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Creation Date</th>
+                    <th>Assignment</th>
+                    <th>Tags</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for group in groups %}
+                    <tr>
+                        <td>{{ group.name }}</td>
+                        <td>{{ group.creation_date }}</td>
+                        <td>{{ group.assignment_id }}</td>
+                        <td>
+                            {% for tag in group.tags.all %}
+                                {{ tag.to_html }}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <a href="{% url 'group_details' group.id %}" class="mude-button safe">Details</a>
+                            <a href="{% url 'delete_group' group.id %}" class="mude-button danger" onclick="return confirmDelete();">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

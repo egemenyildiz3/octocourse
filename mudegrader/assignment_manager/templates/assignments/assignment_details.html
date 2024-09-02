@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+<script>
+    function confirmPublish() {
+        res = confirm("Are you sure you want to publish this assignment?");
+        if (res == true) {
+            var spinner = document.getElementById('spinner');
+            spinner.style.display = 'flex';
+        }
+        return res;
+    }
+    window.addEventListener('pageshow', function() {
+        var spinner = document.getElementById('spinner');
+        spinner.style.display = 'none';
+    });
+
+</script>
+{% endblock %}
+
+{% block content %}
+<style>
+    .loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    }
+    
+    .spinner {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    }
+    
+    @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+    }
+</style>
+<div id="spinner" class="loading">
+    <div class="spinner"></div>
+</div>
+<div class="content-box" id="box1">
+
+    <div class="content-header">
+        <div><h2>{{ assignment.title }}</h2></div>
+        
+        <div>
+            <!-- In both cases manual publish should be seen? -->
+            <a href="{% url 'publish_manually' assignment.id %}" class="mude-button publish">Manual Publish</a>
+            {% if assignment.is_published %}
+                <a href="{% url 'student_group_list' assignment.id %}" class="mude-button safe">Submissions</a>
+            {% else %}
+                <a href="{% url 'publish_assignment' assignment.id %}" class="mude-button publish" id="publish-button" onclick="return confirmPublish();">Publish</a>
+                <a href="{% url 'edit_assignment' assignment.id %}" class="mude-button safe">Edit</a>
+            {% endif %}
+            <a href="{% url 'assignment_list' selected_course.pk %}"  class="mude-button back">Back</a>
+        </div>
+    </div>
+    {% include 'message_box.html' %}
+    <div class="detail-container scrollable-table">
+        <div class="info">
+            <label>Description:</label>
+            <div>{{ assignment.description }}</div>
+        </div>
+        <div class="info">
+            <label>Gitlab Link:</label>
+            {% if assignment.get_version_control_url %}
+                <a class="details-link"  target="_blank" href="{{ assignment.get_version_control_url }}">Link to Gitlab Group</a>
+            {% else %}
+                <span class="details-link" style="color:#a94442; background-color:#f2dede;">Gitlab Group not found</span>
+            {% endif %}
+        </div>
+        <div class="info">
+            <label>Assignment Path:</label>
+            <div>{{ assignment.path_in_filesystem }}</div>
+        </div>
+        <div class="info">
+            <label>Start Date:</label>
+            <div>{{ assignment.start_date }}</div>
+        </div>
+        <div class="info">
+            <label>Due Date:</label>
+            <div>{{ assignment.due_date }}</div>
+        </div>
+        <div class="info">
+            <label>Total Points:</label>
+            <div>{{ assignment.total_points }}</div>
+        </div>
+        <div class="info">
+            <label>Published:</label>
+            <div>{{ assignment.is_published }}</div>
+        </div>
+        <div class="info">
+            <label>Server Check Interval</label>
+            <div>
+                Every {{ assignment.get_server_check_interval_display }} ({{ assignment.server_check_interval }}h)
+            </div>
+        </div>
+        <div class="info">
+            <label>Tags:</label>
+            {% if assignment.tags.all %}
+                {% for tag in assignment.tags.all %}
+                    <div>{{ tag.to_html }}</div>
+                {% endfor %}
+            {% else %}
+                <p>No tags selected.</p>
+            {% endif %}
+        </div>
+        <div class="info">
+            <label>Uploaded File:</label> 
+            {% if assignment.assignment_file %}
+                <a href="{{ assignment.assignment_file.url }}">{{ assignment.assignment_file.name }}</a>
+            {% else %}
+                <p>No file uploaded.</p>
+            {% endif %}
+        </div>
+    
+{#        <div class="assignment-preview">#}
+{#            <p><i>TODO: ASSIGNMENT PREVIEW</i></p>#}
+{#            <p><i>TODO: ASSIGNMENT CHECKS</i></p>#}
+{#        </div>#}
+
+    </div>
+</div>
+<div class="content-box" id="box2">
+    {% include "comment_section.html" %}
+</div>
+{% endblock %}

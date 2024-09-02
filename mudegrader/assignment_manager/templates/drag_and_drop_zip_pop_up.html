@@ -1,0 +1,24 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/modal.css' %}">
+
+<script>
+    let importUrl = "{{ import_url }}";
+    let modalTitle = "{{ title }}";
+</script>
+<script src="{% static 'js/zip_modal.js' %}"></script>
+<script src="{% static 'js/event_listeners.js' %}"></script>
+<div id="importZipModal" class="modal">
+    <input type="hidden" id="csrfToken" value="{{ csrf_token }}">
+
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">{{ title }}</h2>
+        <div id="drop_zone_zip">
+            <p>Drag one or more files to this Drop Zone...</p>
+            <div id="fileListZip"></div>
+        </div>
+        <input type="file" id="fileInputZip" style="display: none;" multiple>
+        <button onclick="document.getElementById('fileInputZip').click();">Select Files</button>
+        <button id="uploadButtonZip">Upload Files</button>
+    </div>
+</div>

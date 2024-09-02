@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block scripts %}
+<script src="{% static 'js/add_assignment.js' %}"></script>
+<script src="{% static 'js/extrachecks.js' %}"></script>
+<script src="{% static 'js/event_listeners.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="content-box">
+    {% include 'assignments/partials/add_assignment_header.html' %}
+    {% include 'message_box.html' %}
+    <div class="detail-container scrollable-table">
+        <form method="post" enctype="multipart/form-data" id="assignmentForm" action="{% url 'add_assignment' %}">
+            {% csrf_token %}
+            {% include 'assignments/partials/add_assignment_form.html' %}
+            <button type="button" class="mude-button safe" id="addAssignmentUnitButton">Add Assignment Unit</button>
+            <button type="button" class="mude-button data" id="uploadZipButton">Upload ZIP File</button>
+            <hr>
+            <div style="margin-top: 10px">
+                        <!-- New section for extra checks -->
+<div class="form-group">
+    <label for="extraChecks">Extra Checks</label>
+    <div id="extraChecksContainer">
+        <div class="extra-check">
+            <div class="check-inputs">
+                <!-- Dynamic inputs will be inserted here -->
+            </div>
+        </div>
+    </div>
+    <button type="button" id="addCheckButton" class="mude-button safe">Add Check</button>
+</div>
+                <button type="submit" class="mude-button safe">Create</button>
+                <a href="{% url 'assignment_list' selected_course.id %}" class="mude-button danger">Cancel</a>
+            </div>
+        </form>
+
+
+    </div>
+    
+</div>
+
+{% url "import_zip_assignment_units" selected_course.id as import_zip_url %}
+{% include "drag_and_drop_zip_pop_up.html" with import_url=import_zip_url title="Upload Assignment Units ZIP" %}
+{% endblock %}

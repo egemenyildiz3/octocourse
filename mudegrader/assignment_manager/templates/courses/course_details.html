@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+    <script>
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this assignment?");
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="content-box">
+        <div class="content-header">
+            <h1>Course: {{ course.course_code }}</h1>
+            <div style="margin-left: 20px;">
+                <a href="{% url 'edit_tags' course.id %}" class="mude-button safe">Manage Tags</a>
+                <a href="{% url 'feedback_template_new' course.id %}" class="mude-button safe">Manage Feedback Template</a>
+                <a href="{% url 'staff_list' course.id %}" class="mude-button safe">Staff List</a>
+            </div>
+            <div>
+                <a href="{% url 'edit_course' course.id %}" class="mude-button safe">Edit</a>
+                <a href="{% url 'delete_course' course.id %}" class="mude-button danger" onclick="return confirmDelete();">Delete</a>
+                <a href="{% url 'course_list' %}" class="mude-button back">Back</a>
+            </div>
+        </div>
+        <div class="detail-container scrollable-table">
+            <p><strong>Description:</strong> {{ course.description }}</p>
+            <p><strong>URL-Safe Name:</strong> {{ course.unique_name }}</p>
+            <p>
+                <strong>Gitlab Link:</strong>
+                {% if course.get_version_control_url %}
+                    <a class="details-link"  target="_blank" href="{{ course.get_version_control_url }}">Link to Gitlab Repo</a>
+                {% else %}
+                    <span class="details-link" style="color:#a94442; background-color:#f2dede;">Gitlab repository not found</span>
+                {% endif %}
+            </p>
+            <p><strong>Start Year:</strong> {{ course.start_year }}</p>
+            <p><strong>End Year:</strong> {{ course.end_year }}</p>
+            <p><strong>Related Tags:</strong>
+                {% for tag in course.tags.all %}
+                    {{ tag.to_html }}
+                {% endfor %}
+            </p>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,65 @@
+# .prospector.yaml
+
+inherits: profile:django
+
+ignore:
+  - migrations/
+  - mudegrader/docs/*
+ignore-patterns:
+  - docs/*.py
+  # - (^|/)skip(this)?(/|$)
+
+output-format: json
+
+strictness: medium
+test-warnings: true
+doc-warnings: false
+
+# inherits:
+#   - my/other/profile.yml
+
+ignore-paths:
+  - docs
+
+
+pycodestyle:
+  disable:
+    - W602
+    - W603
+  enable:
+    - W601
+  options:
+    max-line-length: 100
+
+## Config for pylint ## 
+
+pylint:
+  disable:
+    - wildcard-import
+    - relative-import
+    - invalid-name
+    - unused-wildcard-import
+    - wrong-import-position
+    - too-few-public-methods
+    - old-style-class
+    - no-init
+    - no-self-use
+    - unused-argument
+    - too-many-arguments
+    - too-many-instance-attributes
+    - attribute-defined-outside-init
+    - redefined-builtin
+    - too-many-ancestors
+    - arguments-differ
+    - abstract-method
+    - too-many-function-args
+    - assignment-from-none
+    - redefined-outer-name
+    - no-self-argument
+  options:
+    max-locals: 25
+    max-line-length: 120
+
+# Cyclomatic complexity (ifififiif)
+mccabe:
+  run: true

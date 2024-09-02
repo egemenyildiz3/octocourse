@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% load custom_tags %}
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <style>
+        #logo {
+            vertical-align: middle;
+            color:#092737 ;
+        }
+    </style>
+    <script>
+        function addSlugValidation(inputId) {
+            var inputElement = document.getElementById(inputId);
+            if (!inputElement) return;  // Exit if no element found
+
+            inputElement.addEventListener('input', function () {
+                const isValid = /^[a-zA-Z0-9\-_]+$/.test(this.value);
+                let validationMessage = 'Please enter only letters, numbers, underscores and hyphens.';
+                this.setCustomValidity(isValid ? '' : validationMessage);
+            });
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    {% block scripts %}
+    {% endblock %}
+    <meta charset="UTF-8">
+    <title>MUDE Grader</title>
+    <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/mude_buttons.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/scrollbar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+    <div class="wrapper">
+        <a id="title" style=" text-decoration: none; color: inherit;" href="
+        {% if request.session.selected_course_id %}
+            {% url "assignment_list" request.session.selected_course_id %}
+        {% else %}
+            {% url "course_list" %}
+        {% endif %}">
+            <div style="text-align: center;">
+                <h1>
+                    <img src="{% static 'images/android-chrome-192x192.png' %}" alt="Icon" style="vertical-align: middle; width: 32px; height: 32px;">
+                    <span id="logo">MUDE Grader</span>
+                </h1>
+            </div>
+        </a>
+        {% include 'sidebar.html' %}
+        <div id="top-bar">
+            <!-- Add content for the top bar if needed -->
+        </div>
+        <div class="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</body>
+</html>

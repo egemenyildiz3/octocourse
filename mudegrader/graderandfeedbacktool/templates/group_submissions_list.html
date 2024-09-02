@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<head>
+<link rel="stylesheet" href="{% static 'css/backbutton.css' %}">
+    <title>Submissions for {{ group.name }}</title>
+</head>
+
+    <div class="content-box">
+        <div class="content-header">
+            <h1>Submission List for {{ group.name }}</h1>
+            <div>
+                <a href="{% url 'group_details' group.id %}" class="mude-button back">Back</a>
+            </div>
+        </div>
+        <table>
+            <thead>
+            <tr>
+                <th>Submission ID</th>
+                <th>Assignment ID</th>
+                <th>Assignment Name</th>
+                <th>Submission Time</th>
+                <th>Grading Status</th>
+                <th>Feedback</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for submission in submissions %}
+                <tr>
+                    <td>{{ submission.id }}</td>
+                    <td>{{ submission.assignment.id }}</td>
+                    <td>{{ submission.assignment.name }}</td>
+                    <td>{{ submission.submission_time }}</td>
+                    <td>{{ submission.grading_status }}</td>
+                    <td>
+                        <a href="{% url 'submission_view' submission.id %}" class="mude-button safe">Grade</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

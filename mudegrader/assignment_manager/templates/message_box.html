@@ -1,0 +1,63 @@
+<style>
+    .alert {
+        padding: 10px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+
+    .close {
+        cursor: pointer;
+        border-radius: 45px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-right: 15px;
+        padding-left: 15px;
+        background-color: rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.10);
+    }
+
+    .close:hover {
+        background-color: rgba(0, 0, 0, 0.08);
+        color: black;
+    }
+    .alert-success {
+        color: #3c763d;
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+    }
+    .alert-warning {
+        color: #8a6d3b;
+        background-color: #fcf8e3;
+        border-color: #faebcc;
+    }
+    .alert-error {
+        color: #a94442;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+    }
+    {# hide django's automatic error list '#}
+    ul.errorlist {display:none;}
+    
+</style>
+
+<div>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li><div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} style="display: flex;align-items: center;
+    justify-content: space-between;">
+                    <div>{{ message }}</div>
+                    <div class="close" onclick="closeAlert(this)">
+                        <i class="fa-solid fa-xmark"></i>
+                    </div>
+                </div></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+<script>
+    function closeAlert(element) {
+        // hiding the message
+        element.parentElement.style.display = 'none';
+    }
+</script>

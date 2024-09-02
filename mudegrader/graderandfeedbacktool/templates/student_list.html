@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'css/searchbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
+    <style>
+        .header-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .alert-success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+        }
+        .alert-warning {
+            color: #8a6d3b;
+            background-color: #fcf8e3;
+            border-color: #faebcc;
+        }
+        .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+    </style>
+    <title>Student List</title>
+</head>
+
+<div class="content-box">
+    <h1>List of students who made submissions for {{assignment.title}}</h1>
+    <div class="header-buttons">
+        <a href="{% url 'grading_assignment_list' %}" class="mude-button back">Go Back to List of Assignments</a>
+        <button id="collect-submissions-button" class="mude-button collect">Collect Submissions for this Assignment</button>
+        <button id="send-feedback-button" class="mude-button danger">Send Feedback to Students Below</button>
+    </div>
+
+    <!-- Messages container -->
+    <div id="messages-container"></div>
+
+    <!-- Search and Filter Forms -->
+    <div class="search-filter-container">
+        <!-- Search Form -->
+        <div class="search-bar">
+            <form action="{% url 'search_student' assignment.id %}" method="GET">
+                <input type="text" name="search_query" placeholder="Search students..." value="{{ search_query }}">
+                <button type="submit" class="mude-button safe">Search</button>
+                {% if is_search %}
+                    <a href="{% url 'student_group_list' assignment.id %}" class="mude-button danger">Clear</a>
+                {% endif %}
+            </form>
+        </div>
+
+        <!-- Filter Form -->
+        <div class="filter-bar">
+            <form action="{% url 'filter_student' assignment.id %}" method="GET">
+                <select name="filter">
+                    <option value="id" {% if filter_param == 'id' %}selected{% endif %}>ID</option>
+                    <option value="first_name" {% if filter_param == 'first_name' %}selected{% endif %}>First Name</option>
+                    <option value="last_name" {% if filter_param == 'last_name' %}selected{% endif %}>Last Name</option>
+                </select>
+                <input type="text" name="value" placeholder="Enter value..." value="{{ filter_value }}">
+                <button type="submit" class="mude-button safe">Filter</button>
+                {% if is_filter %}
+                    <a href="{% url 'student_group_list' assignment.id %}" class="mude-button danger">Clear</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Program</th>
+            <th>Gitlab ID</th>
+            <th>Submission Time</th>
+            <th>Grading Status</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for student in students %}
+            <tr>
+                <td>{{ student.first_name }}</td>
+                <td>{{ student.last_name }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.program }}</td>
+                <td>{{ student.gitlab_id }}</td>
+                <td>{{ student.latest_submission.submission_time }}</td>
+                <td>{{ student.latest_submission.grading_status }}</td>
+                <td><a href="{% url 'submission_list' assignment.id student.id %}" class="mude-button safe">Submissions</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Handle the Collect Submissions button click event
+        $('#collect-submissions-button').click(function() {
+            $.ajax({
+                url: "{% url 'collect_submissions' assignment.id %}",
+                method: "GET",
+                success: function(data) {
+                    $('#messages-container').empty(); // Clear existing messages
+                    if (data.status === 'success') {
+                        $('#messages-container').append(
+                            '<div class="alert alert-success">' + data.message + '</div>'
+                        );
+                    } else if (data.status === 'warning') {
+                        data.messages.forEach(function(message) {
+                            $('#messages-container').append(
+                                '<div class="alert alert-warning">' + message.message + '</div>'
+                            );
+                        });
+                    } else if (data.status === 'error') {
+                        $('#messages-container').append(
+                            '<div class="alert alert-danger">' + data.message + '</div>'
+                        );
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('#messages-container').append(
+                        '<div class="alert alert-danger">An error occurred: ' + error + '</div>'
+                    );
+                }
+            });
+        });
+
+        // Handle the Send Feedback button click event
+        $('#send-feedback-button').click(function() {
+            $.ajax({
+                url: "{% url 'send_feedback' assignment.id %}",
+                method: "GET",
+                success: function(data) {
+                    $('#messages-container').empty(); // Clear existing messages
+                    if (data.status === 'success') {
+                        $('#messages-container').append(
+                            '<div class="alert alert-success">' + data.message + '</div>'
+                        );
+                    } else if (data.status === 'warning') {
+                        data.messages.forEach(function(message) {
+                            $('#messages-container').append(
+                                '<div class="alert alert-warning">' + message.message + '</div>'
+                            );
+                        });
+                    } else if (data.status === 'error') {
+                        $('#messages-container').append(
+                            '<div class="alert alert-danger">' + data.message + '</div>'
+                        );
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('#messages-container').append(
+                        '<div class="alert alert-danger">An error occurred: ' + error + '</div>'
+                    );
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

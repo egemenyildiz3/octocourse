@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="content-box" id="box1">
+        <div class="content-header">
+            <h1>Edit Group: {{ group.name }}</h1>
+        </div>
+        <div class="detail-container">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+    
+                <div>
+                    {% include "form_save_button.html" %}
+                    <a href="{% url 'group_details' group.id %}" class="mude-button danger">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="content-box" id="box2">
+        <div class="content-header">
+            <h1>Add Members:</h1>
+        </div>
+        <div class="detail-container scrollable-table">
+            <h2>Search and Add Students by Net ID</h2>
+            <input type="text" id="student-search" placeholder="Search by student Net ID...">
+            <ul id="search-results"></ul>
+
+            <h2>Group Members</h2>
+            <ul id="group-members">
+                {% for member in group.group_members.all %}
+                    <li data-id="{{ member.student_id.id }}">
+                        {{ member.student_id.first_name }} {{ member.student_id.last_name }} (Net ID: {{ member.student_id.net_id }})
+                        <button onclick="removeStudentFromGroup({{ member.student_id.id }})">Remove</button>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+
+    <script>
+        document.getElementById('student-search').addEventListener('input', function() {
+            let query = this.value;
+            if (query.length > 0) {
+                fetch(`{% url 'find_student_for_group' %}?q=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let results = document.getElementById('search-results');
+                        results.innerHTML = '';
+                        data.forEach(student => {
+                            let li = document.createElement('li');
+                            li.textContent = `${student.name} (Net ID: ${student.net_id})`;
+                            li.dataset.id = student.id;
+                            li.dataset.net_id = student.net_id;
+                            li.style.cursor = 'pointer';  // Add pointer cursor to indicate clickable
+                            li.addEventListener('click', function() {
+                                addStudentToGroup(student.id, student.name, student.net_id);
+                            });
+                            results.appendChild(li);
+                        });
+                    });
+            }
+        });
+
+        function addStudentToGroup(studentId, studentName, studentNetId) {
+            let groupId = {{ group.id }}; // Get the group ID from context
+            fetch(`{% url 'add_student_to_group' %}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ group_id: groupId, student_id: studentId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    let members = document.getElementById('group-members');
+                    let li = document.createElement('li');
+                    li.textContent = `${studentName} (Net ID: ${studentNetId})`;
+                    li.dataset.id = studentId;
+                    let removeButton = document.createElement('button');
+                    removeButton.textContent = 'Remove';
+                    removeButton.addEventListener('click', function() {
+                        removeStudentFromGroup(studentId);
+                    });
+                    li.appendChild(removeButton);
+                    members.appendChild(li);
+                }
+            });
+        }
+
+        function removeStudentFromGroup(studentId) {
+            let groupId = {{ group.id }}; // Get the group ID from context
+            fetch(`{% url 'remove_student_from_group' %}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ group_id: groupId, student_id: studentId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    let members = document.getElementById('group-members');
+                    let li = members.querySelector(`li[data-id="${studentId}"]`);
+                    if (li) {
+                        members.removeChild(li);
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}

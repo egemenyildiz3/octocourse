@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .content-box {
+    padding: 20px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    overflow-y: auto; /* Add vertical scroll bar */
+    max-height: 1000px; /* Optional: Set maximum height to limit scroll */
+  }
+
+  .submission-details {
+    padding: 10px 0; /* Optional: Adjust padding */
+  }
+
+  #box1-1 {
+    margin-bottom: 10px; /* Optional: Adjust margin */
+  }
+
+  /* Style toggle switch */
+  .toggle-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px; /* Optional: Adjust margin as needed */
+    width: 100%; /* Increase width to 100% of the container */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+  }
+
+  .toggle-instruction {
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      text-align: center;
+      color: #333;
+      padding: 25px;
+      background-color: rgba(209, 99, 35, 0.2); /* Green with 20% opacity */
+      border-radius: 4px; /* Rounded corners for the block */
+      display: block;
+      position: relative;
+  }
+
+  .toggle-instruction.completed {
+      background-color: lightgreen;
+  }
+
+  .toggle-switch {
+      position: absolute;
+      bottom: 0;
+      right: 10px;
+      width: 40px;
+      height: 20px;
+      background-color: #5f5151;
+      border-radius: 20px;
+  }
+
+  .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+  }
+
+  .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #e21010;
+      transition: .4s;
+      border-radius: 20px;
+  }
+
+  .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: rgb(249, 244, 244);
+      border-radius: 50%;
+      transition: .4s;
+  }
+
+  input:checked + .toggle-slider {
+      background-color: #28a745;
+  }
+
+  input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+  }
+
+  .content-box {
+    margin-bottom: 20px; /* Optional: Adjust margin as needed */
+  }
+
+  .submission-units-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .submission-units-table th,
+  .submission-units-table td {
+    padding: 0px 0px;
+    text-align: left;
+    border: none; 
+  }
+
+  .submission-units-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+
+  .submission-units-table td {
+    font-weight: bold;
+  }
+
+  .submission-units-table td .graded {
+    color: green;
+  }
+
+  .submission-units-table td .not-graded {
+    color: red;
+  }
+</style>
+
+  <div class="content-box" id="box1">
+    <div class="header-buttons">
+      <a href="{{ back_url }}" class="mude-button back">Go Back to List of Submissions</a>
+    </div>
+    <div class="submission-details">
+      <div class="content-box" id="box1-1">
+        <h1>Submission ID: {{ submission.id }}</h1>
+        {% if not submission.is_graded %}
+          <span class="toggle-instruction">Submission is partially graded</span>
+        {% else %}
+          <span class="toggle-instruction completed">Submission is successfully graded</span>
+        {% endif %}
+        <h2>
+          <div class="toggle-instruction">
+            <span>To grade at the submission level, switch on the toggle. Otherwise, keep it off.</span>
+            <!-- Toggle switch for overall submission grade -->
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggleSubmissionForm">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </h2>
+      </div>
+    
+      <form method="post" id="submissionForm">
+        {% csrf_token %}
+        {{ submission_form.as_p }}
+        <input type="hidden" name="toggle_submission_form_state" id="toggleSubmissionFormState" value="0">
+        <button type="submit">Save</button>
+        <a href="{% url 'reset_submission_level_grade' submission_id %}" class="mude-button danger">Reset Input</a>
+      </form>
+    </div>
+  </div>
+
+  <div class="content-box" id="box2">
+    <h2>Submission Units</h2>
+    <table class="submission-units-table">
+      <thead>
+        <tr>
+          <th>Unit ID</th>
+          <th>File Name</th>
+          <th>Grade</th>
+          <th>Grading Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for unit in submission_units %}
+          <tr>
+            <td>{{ unit.id }}</td>
+            <td>{{ unit.assignment_unit.name }}</td>
+            <td>{{ unit.total_grade }}</td>
+            <td>
+              {% if unit.is_graded %}
+                <span style="font-weight: bold; color: green;">GRADED</span>
+              {% else %}
+                <span style="font-weight: bold; color: red;">NOT GRADED</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if unit.assignment_unit.is_gradable %}
+                <a href="{% url 'submission_unit_detail' unit.id %}" class="safe-button">View Unit</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5">No submission units found</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const toggleSubmissionForm = document.getElementById('toggleSubmissionForm');
+    const toggleSubmissionFormState = document.getElementById('toggleSubmissionFormState');
+    const submissionForm = document.getElementById('submissionForm');
+    const box2 = document.getElementById('box2');
+  
+    // Load the toggle state from localStorage
+    const savedState = localStorage.getItem('toggleSubmissionFormState');
+    if (savedState !== null) {
+      toggleSubmissionForm.checked = savedState === '1';
+      toggleSubmissionFormState.value = savedState; // Update the hidden input value
+    }
+  
+    // Update the state of the form and links based on the toggle
+    const updateFormState = function () {
+      const inputsBox2 = box2.querySelectorAll('input, button, a');
+      const inputsForm = submissionForm.querySelectorAll('input, button, textarea');
+  
+      inputsBox2.forEach(element => {
+        if (toggleSubmissionForm.checked) {
+          element.disabled = true;
+          if (element.tagName.toLowerCase() === 'a') {
+            element.style.pointerEvents = 'none';
+            element.style.color = 'grey';
+          }
+        } else {
+          element.disabled = false;
+          if (element.tagName.toLowerCase() === 'a') {
+            element.style.pointerEvents = 'auto';
+            element.style.color = '';
+          }
+        }
+      });
+  
+      inputsForm.forEach(element => {
+        if (!toggleSubmissionForm.checked) {
+          element.disabled = true;
+        } else {
+          element.disabled = false;
+        }
+      });
+  
+      // Update hidden input value based on the toggle state
+      toggleSubmissionFormState.value = toggleSubmissionForm.checked ? "1" : "0";
+      // Save the state in localStorage
+      localStorage.setItem('toggleSubmissionFormState', toggleSubmissionForm.checked ? "1" : "0");
+    };
+  
+    toggleSubmissionForm.addEventListener('change', updateFormState);
+  
+    // Trigger change event to set the initial state
+    updateFormState();
+  });
+</script>
+
+{% endblock %}

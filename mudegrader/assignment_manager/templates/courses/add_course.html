@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Example of how to call the function
+            addSlugValidation('id_course_code');
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="content-box">
+        <div class="content-header">
+            <h1>Add New Course</h1>
+        </div>
+        {% include 'message_box.html' %}
+        <div class="detail-container scrollable-table">
+            {% include 'form_comment.html' %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="mude-button safe">Create</button>
+                <a href="{% url 'course_list' %}" class="mude-button danger">Cancel</a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

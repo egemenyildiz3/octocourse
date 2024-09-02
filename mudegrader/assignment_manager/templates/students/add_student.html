@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="content-box">
+        <div class="content-header">
+            <h1>Add New Student</h1>
+        </div>
+        <div class="detail-container scrollable-table">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="mude-button safe">Create</button>
+                <a href="{% url 'student_list' %}" class="mude-button danger">Cancel</a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,80 @@
+<div class="grid-item draggable" id="grades-exams" style="grid-row:1/-1;grid-column:2;" draggable="true">
+    <h2>Students and Exams</h2>
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'StudentPerformance')">Student Performance</button>
+        <button class="tablinks" onclick="openTab(event, 'ExamGrades')">Grade Distribution</button>
+        <button class="tablinks" onclick="openTab(event, 'ExamMasterTracks')">Rate of Each Master Track</button>
+        <button class="tablinks" onclick="openTab(event, 'ExamParticipation')">Number of Participants</button>
+    </div>
+    <div id="ExamGrades" class="tab-content">
+        <select id="examDropdown" class="dropdown">
+            {% for exam in exam_grades.keys %}
+                <option value="{{ exam }}">{{ exam }}</option>
+            {% endfor %}
+        </select>
+        <h3>Grade Distribution for <span id="selected-exam">Select an Exam</span></h3>
+        <div class="canvas-container">
+            <canvas id="examChart"></canvas>
+        </div>
+    </div>
+    <div id="ExamMasterTracks" class="tab-content">
+        <h3>Rate of Each Master Track</h3>
+        <table>
+            <tr>
+                <th>Master Track</th>
+                <th>Rate (%)</th>
+            </tr>
+            {% for master_track, rate in master_tracks.items %}
+            <tr>
+                <td>{{ master_track }}</td>
+                <td>{{ rate }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div id="ExamParticipation" class="tab-content">
+        <h3>Exam Participation Rate</h3>
+        <table>
+            <tr>
+                <th>Exam</th>
+                <th>Number of Participants</th>
+            </tr>
+            {% for exam, participants in exam_participants.items %}
+            <tr>
+                <td>{{ exam }}</td>
+                <td>{{ participants }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div id="StudentPerformance" class="tab-content">
+        <div class="scrollable-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Percentage of Points</th>
+                    <th>Group Info</th>
+                    <th>Assignment Scores</th>
+                    <th>Exam Scores</th>
+                    <th>Buddy Check Scores</th>
+                    <th>Number of Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for student in student_performance %}
+                <tr>
+                    <td>{{ student.first_name }}</td>
+                    <td>{{ student.percentage_points }}</td>
+                    <td>{{ student.group_info }}</td>
+                    <td>{{ student.assignment_scores }}</td>
+                    <td>{{ student.exam_scores }}</td>
+                    <td>{{ student.buddy_check_scores }}</td>
+                    <td>{{ student.comments_count }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </div>
+</div>

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="content-box" id="box1">
+        <div class="content-header">
+            <h2>{{ student.first_name }} {{ student.last_name }}</h2>
+            <div>
+                <a href="{% url 'edit_student' student.id %}" class="mude-button safe">Edit</a>
+                <a href="{% url 'student_list' %}" class="mude-button back">Back</a>
+            </div>
+        </div>
+        <div class="detail-container scrollable-table">
+            <div class="info">
+                <label>Email:</label>
+                <div>
+                    <a class="details-link" href="mailto:{{ student.email }}">
+                        <i class="fa-solid fa-envelope"></i>
+                        {{ student.email }}
+                    </a>
+                </div>
+            </div>
+            <div class="info">
+                <label>Enrollment Year:</label>
+                <div>{{ student.enrollment_year }}</div>
+            </div>
+            <div class="info">
+                <label>Program:</label>
+                <div>{{ student.program }}</div>
+            </div>
+            <div class="info">
+                <label>Gitlab Link:</label>
+                <div>
+                    {% if student.get_version_control_url %}
+                        <a class="details-link"  target="_blank" href="{{ student.get_version_control_url }}">Link to Gitlab User</a>
+                    {% else %}
+                        <span class="details-link" style="color:#a94442; background-color:#f2dede;">Gitlab user not found</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="info">
+                <label>MSC Track:</label>
+                <div>{{ student.msc_track }}</div>
+            </div>
+            <div class="info">
+                <label>Self-Assessed Skill:</label>
+                <div>{{ student.self_assessed_skill }}</div>
+            </div>
+            <div class="info">
+                <label>Nationality Type:</label>
+                <div>{{ student.nationality_type }}</div>
+            </div>
+            <div class="info">
+                <label>Start Year in Mude:</label>
+                <div>{{ student.start_year_in_mude }}</div>
+            </div>
+            <div class="info">
+                <label>Brightspace ID:</label>
+                <div>{{ student.brightspace_id }}</div>
+            </div>
+            <div class="info">
+                <label>GitLab ID:</label>
+                <div>{{ student.gitlab_id }}</div>
+            </div>
+            <div class="info">
+                <label>Public SSH Key:</label>
+                <div>{{ student.public_ssh_key }}</div>
+            </div>
+            <div class="info">
+                <label>Tags:</label>
+                {% if student.tags.all %}
+                    {% for tag in student.tags.all %}
+                        <div>{{ tag.to_html }}</div>
+                    {% endfor %}
+                {% else %}
+                    <p>No tags selected.</p>
+                {% endif %}
+            </div>
+            <div class="info">
+                <label>Member Of Groups:</label>
+                <div style="word-break: keep-all">
+                    {% for membership in student.memberships.all %}
+                        {{ membership.group_id.get_details_link_html | safe}}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-box" id="box3">
+    
+        <div class="upper-right">
+            <a href="{% url 'student_submissions_list' student.id %}" class="big-button">Submissions</a>
+            <a href="{% url "exam_list" student.id %}" class="big-button">Exams</a>
+            <a href="{% url 'student_timeline' student.id %}" class="big-button">Timeline</a>
+        </div>
+    </div>
+    <div class="content-box" id="box4">
+        {% include "comment_section.html" %}
+    </div>
+{% endblock %}

@@ -1,0 +1,90 @@
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+td {
+    border-bottom: 1px solid white;
+    /*border-bottom: 1px solid #ddd;*/
+
+}
+
+thead {
+    padding-top: 10px;
+    background-color: #f0f0f0;
+    /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); !* Subtle shadow for depth *!*/
+    border-radius: 15px;
+}
+
+
+/*.table-rows {*/
+/*    max-height: 100%;*/
+/*    overflow-y: auto;*/
+/*}*/
+
+table {
+    height: auto;
+    /*border-collapse: separate; !* Allows border-spacing to work *!*/
+    /*border-spacing: 0 10px; !* Horizontal and vertical spacing *!*/
+    /*max-height: 100%;*/
+    /*overflow: hidden;*/
+    /*overflow-y: auto;*/
+    width: 100%; /* Set the table width to fill the container */
+    table-layout: fixed; /* Enable fixed table layout */
+    border-collapse: separate; /* This is needed for border spacing and radius to render correctly */
+    border-spacing: 0; /* Adjust as needed */
+
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    border-radius: 10px;
+    /*z-index: 1;*/
+    /*border-bottom: 2px solid red;*/
+}
+table th:first-child{
+    border-radius:10px 0 0 10px;
+}
+
+table th:last-child{
+    border-radius:0 10px 10px 0;
+}
+
+/*tbody {*/
+/*    !*max-height: 100%;*!*/
+/*    overflow: scroll;*/
+/*}*/
+
+.scrollable-table {
+    max-height: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    padding-right: 10px;
+
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+td {
+    overflow: hidden;
+}
+
+
+th::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px; /* Position the pseudo-element below the th */
+    width: 100%;
+    /*border-bottom: 5px solid white; !* Add the border bottom *!*/
+}

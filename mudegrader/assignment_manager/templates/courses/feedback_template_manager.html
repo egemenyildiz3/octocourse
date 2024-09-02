@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-box" id="box1">
+    <div class="content-header">
+        <h2>Feedback Template Manager</h2>
+        <a href="{% url 'course_details' course_id %}" class="mude-button back">Back</a>
+    </div>
+    <div>
+        you have access to:
+        {% for field in fields %}
+            {% verbatim %} {{ {% endverbatim %}
+            {{ field }}
+            {% verbatim %} }} {% endverbatim %} 
+        {% endfor %}
+    </div>
+
+    <select id="templateSelector" onchange="changeTemplate()">
+        <option value="">Select a template</option>
+        {% for template in templates %}
+            <option value="{{ template.id }}" {% if template.id == form.instance.id %}selected{% endif %}>
+                {% if template.course %}{{ template.course }} - {% endif %}{{ template.id }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="mude-button safe" >Save</button>
+        <a class="mude-button safe" onclick="window.location.href='{% url 'feedback_template_new' course_id %}'">New</a>
+    </form>
+    
+    
+
+    <script>
+        function changeTemplate() {
+            var selectedTemplate = document.getElementById('templateSelector').value;
+            var baseUrl = "{% url 'feedback_template_view' course_id=course_id template_id=999999 %}".replace('999999', selectedTemplate);
+            if (selectedTemplate) {
+                window.location.href = baseUrl;
+            }
+        }
+    </script>
+</div>
+
+<div class="content-box" id="box2">
+    <div class="content-header">
+        <h2>Result:</h2>
+    </div>
+    <div style="background-color: gainsboro">
+        {{ result | safe}}
+    </div>
+
+</div>
+{% endblock %}
+

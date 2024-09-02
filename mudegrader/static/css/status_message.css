@@ -1,0 +1,67 @@
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position the tooltip above the button */
+    left: 50%;
+    margin-left: -100px; /* Use half of the width (200px), to center the tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+.messages {
+background-color: #f9f9f9; /* Light gray background */
+border: 1px solid #ddd; /* Light border */
+border-radius: 8px; /* Rounded corners */
+padding: 16px; /* Space inside the container */
+margin-bottom: 20px; /* Space below the container */
+font-family: Arial, sans-serif; /* Font style */
+font-size: 14px; /* Font size */
+color: #333; /* Text color */
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+/* Individual message style */
+.messages .message {
+padding: 10px 12px; /* Space inside individual messages */
+margin-bottom: 10px; /* Space between messages */
+border-bottom: 1px solid #eee; /* Divider between messages */
+}
+
+.messages .message:last-child {
+border-bottom: none; /* Remove divider for the last message */
+}
+
+/* Message sender name */
+.messages .message .sender {
+font-weight: bold; /* Bold text for sender */
+color: #007bff; /* Blue color for sender name */
+}
+
+/* Message content */
+.messages .message .content {
+margin-top: 4px; /* Space between sender and content */
+color: #555; /* Slightly lighter text color for content */
+}
+
+/* Message timestamp */
+.messages .message .timestamp {
+display: block; /* Block display for timestamp */
+font-size: 12px; /* Smaller font size for timestamp */
+color: #999; /* Gray color for timestamp */
+margin-top: 6px; /* Space above the timestamp */
+}

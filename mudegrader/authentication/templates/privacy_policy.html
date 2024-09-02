@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <div class="content-box">
+        <div>
+            <a href="{% url 'course_list' %}" class="mude-button back">Back</a>
+        </div>
+        <div class="scrollable-table">
+        <h1>Privacy Policy</h1>
+        <p>Welcome to the assignment management app for Modelling, Uncertainty, Data for Engineers (MUDE) Master's program in Civil Engineering and Geosciences at TU Delft. This Privacy Policy outlines the types of information we collect, how we use and protect that information, and your rights regarding your personal data. By using the App, you agree to the terms of this Privacy Policy.</p>
+
+        <h2>Who We Are</h2>
+        <p>The App is developed and maintained by the Master's program in Civil Engineering and Geosciences at TU Delft. The App is exclusively for use by teachers and teaching assistants (TAs) of the Master's program.</p>
+
+        <h2>Information We Collect</h2>
+        <p>We collect the following types of information from users of the App:</p>
+        <ul>
+            <li><strong>Personal Information</strong>: This includes your name, email address, and role (teacher or TA).</li>
+            <li><strong>Course Information</strong>: Details about the courses you are involved with, including course codes, descriptions, and department affiliations.</li>
+            <li><strong>Assignment Data</strong>: Information related to assignments, such as assignment titles, descriptions, due dates, and submissions.</li>
+        </ul>
+
+        <h2>How We Use Your Information</h2>
+        <p>We use the information collected for the following purposes:</p>
+        <ul>
+            <li><strong>Providing Services</strong>: To facilitate assignment management, including assignment creation, submission tracking, and grading.</li>
+            <li><strong>Communication</strong>: To communicate with you about assignments, course-related updates, and other important information.</li>
+            <li><strong>Improvement of Services</strong>: To analyze usage patterns and improve the functionality and user experience of the App.</li>
+        </ul>
+
+        <h2>Data Storage and Security</h2>
+        <p>The App and all associated data are stored on secure servers managed by TU Delft. We implement appropriate technical and organizational measures to protect your personal data against unauthorized access, loss, or misuse.</p>
+
+        <h2>Data Sharing</h2>
+        <p>We do not share your personal information with third parties, except as required by law or to protect the rights, property, or safety of TU Delft, our users, or others.</p>
+
+        <h2>Your Rights</h2>
+        <p>You have the following rights regarding your personal data:</p>
+        <ul>
+            <li><strong>Access</strong>: You can request access to the personal data we hold about you.</li>
+            <li><strong>Correction</strong>: You can request that we correct any inaccurate or incomplete information.</li>
+            <li><strong>Deletion</strong>: You can request that we delete your personal data, subject to certain conditions.</li>
+        </ul>
+        <p>To exercise any of these rights, please contact us using the contact details provided below.</p>
+
+        <h2>Changes to This Privacy Policy</h2>
+        <p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on the App. You are advised to review this Privacy Policy periodically for any changes.</p>
+
+        <h2>Contact Us</h2>
+        <p>If you have any questions about this Privacy Policy or our data practices, please contact us at:</p>
+        <p>
+            Civil Engineering and Geosciences Department<br>
+            TU Delft<br>
+            Communication-CiTG@tudelft.nl<br>
+        </p>
+        </div>
+    </div>
+{% endblock %}

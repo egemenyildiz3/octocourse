@@ -1,0 +1,31 @@
+<div class="sidebar">
+    {% if selected_course %}
+        <ul>
+            {# TODO: I fixed this once  #}
+            <li class="{% if '/assignments/' in request.path %}active{% endif %}"><a href="{% url 'assignment_list' selected_course.pk %}"><i class="fas fa-th-large"></i>Assignments</a></li>
+            <li class="{% if '/analytics/' in request.path %}active{% endif %}"><a href="{% url 'analytics_dashboard' %}"><i class="fa-solid fa-chart-line"></i>Analytics</a></li>
+            <li class="{% if '/students/' in request.path %}active{% endif %}"><a href="{% url 'student_list' %}"><i class="fa-solid fa-user"></i>Students</a></li>
+            <li class="{% if '/groups/' in request.path %}active{% endif %}"><a href="{% url 'group_list' %}"><i class="fa-solid fa-users"></i>Groups</a></li>
+            <li class="{% if '/grading/' in request.path %}active{% endif %}"><a href="{% url 'grading_assignment_list' %}"><i class="fas fa-edit"></i>Grading</a></li>
+        </ul>
+    {% else %}
+        <p>Select a course to see assignments.</p>
+    {% endif %}
+    <div class="bottom-left-info">
+        {% if selected_course %}
+            <a href="{% url 'course_list' %}" class="badge" id="course-selector">
+                <span style="color: darkgrey;">course:</span> {{ selected_course }}
+            </a>
+        {% else %}
+            <a href="#" class="badge" id="course-selector">
+                <span style="color: darkgrey;">course:</span> none
+            </a>
+        {% endif %}
+        <div class="badge">
+            <span class="text1">user:</span> {{ request.user.username }}
+        </div>
+        <a href="{% url 'logout' %}" class="log-out-button">
+            Sign Out
+        </a>
+    </div>
+</div>

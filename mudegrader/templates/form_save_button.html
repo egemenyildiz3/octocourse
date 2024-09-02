@@ -1,0 +1,11 @@
+{# this is a button specifically for showing a checkmark on a form that redirects to the same page #}
+
+{% load static %}
+<script src="{% static 'js/check_mark_save_button.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/check_mark_save_button.css' %}">
+
+
+<button type="submit" class="mude-button safe">
+    <i id="check-mark" class="fa-solid fa-check hide" ></i>
+    <span id="save-text" class="show-instant">Save</span>
+</button>

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="content-box" id="box1">
+        <div class="content-header">
+            <h2>Edit Student: {{ student.first_name }} {{ student.last_name }}</h2>
+        </div>
+        <div class="detail-container scrollable-table">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                {% include "form_save_button.html" %}
+                <a href="{% url 'student_details' student.id %}" class="mude-button danger">Cancel</a>
+            </form>
+        </div>
+    </div>
+    
+    <div class="content-box" id="box2">
+        <div class="upper-right">
+            <a href="{% url 'student_submissions_list' student.id %}" class="big-button">Submissions</a>
+            <a href="{% url "exam_list" student.id %}" class="big-button">Exams</a>
+            <a href="{% url 'student_timeline' student.id %}" class="big-button">Timeline</a>
+        </div>
+    </div>
+{% endblock %}

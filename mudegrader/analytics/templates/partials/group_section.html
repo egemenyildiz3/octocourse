@@ -1,0 +1,47 @@
+<div class="grid-item draggable" id="groups-performance" style="grid-row:2; grid-column:1;" draggable="true">
+    <h2>Groups</h2>
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'GroupPerformance')">Group Performance Comparison</button>
+        <button class="tablinks" onclick="openTab(event, 'GroupGrades')">Group Grades for All Assignments</button>
+    </div>
+    <div id="GroupPerformance" class="tab-content">
+        <div class="scrollable-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Group Name</th>
+                    <th>Average Performance</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for group, performance in group_performance.items %}
+                    <tr>
+                        <td>{{ group }}</td>
+                        <td>{{ performance }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="GroupGrades" class="tab-content">
+        <select id="groupDropdown" class="dropdown">
+            <option value="">Select a Group</option>
+            {% for group in group_grades.keys %}
+                <option value="{{ group }}">{{ group }}</option>
+            {% endfor %}
+        </select>
+        <h3>Group Grades for All Assignments for <span id="selected-group">Select a Group</span></h3>
+        <table id="groupGradesTable">
+            <thead>
+                <tr>
+                    <th>Assignment</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be populated by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</div>

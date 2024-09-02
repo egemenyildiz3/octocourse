@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{%  load static %}
+
+{% block content %}
+
+<style>
+    .submission-table {
+        width: 100%; /* Ensure table spans full width */
+        border-collapse: collapse; /* Collapse borders for better spacing */
+        margin-bottom: 20px; /* Optional: Adjust margin-bottom as needed */
+    }
+
+    .submission-table th, .submission-table td {
+        padding: 10px; /* Adjust padding for cell content */
+        text-align: center; /* Align text to the left within cells */
+        vertical-align: middle;
+        border: 0px solid #ddd; /* Add borders around cells */
+    }
+
+    .submission-table th {
+        background-color: #f2f2f2; /* Background color for header cells */
+        font-weight: bold; /* Bold font for header text */
+    }
+
+    .submission-table td {
+        vertical-align: top; /* Align content to the top of cells */
+    }
+
+    .student-id-column {
+        width: 5px; /* Adjust width as needed */
+    }
+</style>
+
+<head>
+<link rel="stylesheet" href="{% static 'css/backbutton.css' %}">
+    <title></title>
+</head>
+
+<div class="content-box">
+    <div class="content-header">
+        <div>
+            {% if assignment.is_individual %}
+                <a href="{% url 'student_group_list' assignment.id %}" class="mude-button back">Go Back to List of Students</a>
+            {% else %}
+                <a href="{% url 'student_group_list' assignment.id %}" class="mude-button back">Go Back to List of Groups</a>
+            {% endif %}
+            <h1>Submission List</h1>
+        </div>
+    </div>
+    <table class="submission-table">
+        <thead>
+            <tr>
+                <th>Submission ID</th>
+                
+                <!-- <th>
+                    {% if assignment.is_individual %}
+                        Student ID
+                    {% else %}
+                        Group ID
+                    {% endif %}
+                </th> -->
+                
+                <th>
+                    {% if assignment.is_individual %}
+                        Student Name
+                    {% else %}
+                        Group Name
+                    {% endif %}
+                </th>
+                
+                <th>Submission Time</th>
+                <th>Grading Status</th>
+                <th>Tags</th>
+                <th>Auto graded grade</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            {% for submission in submissions %}
+            <tr>
+                <td>
+                    {% if submission != first_submission %}
+                        <span style="font-weight: bold; color: red;">{{ submission.id }} (NOT THE LATEST SUBMISSION)</span>  
+                    {% else %}
+                        <span style="font-weight: bold; color: green;">{{ submission.id }} (LATEST SUBMISSION)</span>
+                    {% endif %}
+                </td>
+                
+                {% if assignment.is_individual %}
+                    <!-- <td class="student-id-column">{{ submission.student.id }}</td> -->
+                    <td>{{ submission.student.first_name }}</td>
+                {% else %}
+                    <!-- <td>{{ submission.group.id }}</td> -->
+                    <td>{{ submission.group.name }}</td>
+                {% endif %}
+                
+                <td>{{ submission.submission_time }}</td>
+                
+                <td>
+                    {% if submission == first_submission and submission.is_graded %}
+                        <span style="font-weight: bold; color: green;">GRADED</span>
+                    {% elif submission == first_submission and not submission.is_graded %}
+                        <span style="font-weight: bold; color: red;">NOT GRADED</span>    
+                    {% else %}
+                        <span style="font-weight: bold; color: orangered;">CANNOT BE GRADED</span>
+                    {% endif %}
+                </td>
+    
+                <td>
+                    {% for tag in submission.tags.all %}
+                        {{ tag.to_html }}
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {{submission.auto_graded_grade}}
+                </td>
+
+                <td>
+                    {% if submission == first_submission %}
+                        <a href="{% url 'submission_view' submission.id %}" class="mude-button safe">Grade this Submission</a>
+                    {% else %}
+                        <a href="" class="mude-button safe">Commit for this Submission</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

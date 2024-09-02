@@ -1,0 +1,35 @@
+<div class="content-header">
+    <div>
+        <h1>Manual distribution for Assignment: {{ assignment.title }}</h1>
+    </div>
+    <div>
+        <a href="{% url 'assignment_details' assignment.id %}" class="mude-button back">Back</a>
+    </div>
+</div>
+{% include 'message_box.html' %}
+<div class="scrollable-table">
+    <table>
+        <h2>List of {{name_var}}s who do not have assignment {{assignment.title}}</h2>
+        <thead>
+            <tr>
+                <th> Group Name </th>
+                <th> Group ID </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in missing_objects %}
+                <tr>
+                    <td> {{ item.name}}</td>
+                    <td> {{ item.id}}</td>
+                    <td class="tooltip">
+                        <div class="tooltip">
+                            <a href="{% url 'publish_manually_group' assignment.id item.id %}" class="mude-button data" id="publish-button">Publish</a>
+                            <span class="tooltiptext">You will be publishing assignment {{assignment.title}} to this {{ name_var }}!</span>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

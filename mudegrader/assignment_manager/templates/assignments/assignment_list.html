@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this assignment?");
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+    <div class="content-box">
+        <div class="content-header">
+            <h1>Assignment List</h1>
+            <div>
+                <a href="#" class="mude-button data">Import</a>
+                <a href="{% url 'export_all_assignments_for_selected_course' %}" class="mude-button data">Export</a>
+                <a href="{% url 'add_assignment' %}" class="mude-button safe">
+                    {# plus sign #}
+                    <small><i class="fa-solid fa-plus"></i></small>Assignment
+                </a>
+            </div>
+        </div>
+        {% if assignments %}
+            <div class="scrollable-table">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Start Date</th>
+                        <th>Due Date</th>
+                        <th>Published</th>
+                        <th>Tags</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for assignment in assignments %}
+                        <tr>
+                            <td>{{ assignment.title }}</td>
+                            <td>{{ assignment.start_date }}</td>
+                            <td>{{ assignment.due_date }}</td>
+                            <td>{{ assignment.is_published }}</td>
+                            <td>
+                                {% for tag in assignment.tags.all %}
+                                    {{ tag.to_html }}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <a href="{% url 'assignment_details' assignment.id %}" class="mude-button safe">Details</a>
+                                <a href="{% url 'delete_assignment' assignment.id %}" class="mude-button danger" onclick="return confirmDelete();">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="empty-message">No assignments to show</p>
+        {% endif %}
+    </div>
+
+    {# pop up #}
+    {% url "import_assignments_csv" as import_url %}
+    {% include "drag_and_drop_pop_up.html" with import_url=import_url %}
+{% endblock %}

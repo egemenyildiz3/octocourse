@@ -1,0 +1,31 @@
+{% extends "login_base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+        <div class="center-container">
+        <div class="login-box">
+            <h2>Login</h2>
+            {% if invalid %}
+                <p class="error-message">Invalid username or password</p>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        {% if login_success %}
+            alert("Login successful!");
+            window.location.href = "{% url 'course_list' %}";
+        {% endif %}
+    </script>
+{% endblock %}

@@ -1,0 +1,23 @@
+# Start from the custom base image hosted on Docker Hub
+FROM jeijkenboom/mudegrader-base:latest
+
+# Set /app as the working directory
+WORKDIR /app
+
+RUN find . | sha1sum
+
+# Copy the entire application folder into /app in the container
+COPY . /app
+
+COPY ./requirements.txt /app
+
+RUN ls -la
+
+# Install Python dependencies specified in requirements.txt
+RUN pip install -r requirements.txt
+
+# Expose port 8000 to allow external connections
+EXPOSE 8000
+
+# Command to run the Django development server
+CMD ["python", "/app/mudegrader/manage.py", "runserver", "0.0.0.0:8000"]

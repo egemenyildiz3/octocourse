@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="content-box" id="box1">
+        <div class="content-header">
+            <h1>Group: {{ group.name }}</h1>
+            <div>
+                <a href="{% url 'edit_group' group.id %}" class="mude-button safe">Edit</a>
+                <a href="{% url 'group_list' %}" class="mude-button back">Back</a>
+                {# opens up the local email program with group emails already in the to: field #}
+                <a class="mude-button email" href="mailto:{{ group_email_addresses | join:',' }}">
+                    <i class="fa-solid fa-envelope"></i>
+                    Email Group
+                </a>
+            </div>
+        </div>
+        <div class="detail-container scrollable-table">
+            <div class="info">
+                <label>Tags:</label>
+                {% if group.tags.all %}
+                    {% for tag in group.tags.all %}
+                        <div>{{ tag.to_html }}</div>
+                    {% endfor %}
+                {% else %}
+                    <p>No tags selected.</p>
+                {% endif %}
+            </div>
+            <div class="info">
+                <div class="label-div">Members:</div>
+                <div>
+                    {% if group.group_members.exists %}
+                        <h2>Group Members</h2>
+                        <ul id="group-members">
+                            {% for member in group.group_members.all %}
+                                <li data-id="{{ member.student_id.id }}">
+                                    {{ member.student_id.get_details_link_html | safe }} (Net ID: {{ member.student_id.net_id }})
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="empty-message">There are no group members in this group.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-box" id="box3">
+        <div class="upper-right">
+            <a href="{% url 'group_submissions_list' group.id %}" class="big-button">Submissions</a>
+            <a href="{% url 'group_timeline' group.id %}" class="big-button">Timeline</a>
+        </div>
+    </div>
+    <div class="content-box" id="box4">
+        {% include "comment_section.html" %}
+    </div>
+{% endblock %}

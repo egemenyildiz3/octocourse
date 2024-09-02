@@ -1,0 +1,140 @@
+
+/* wrapper for list of comments and comment form */
+.comment-section {
+    /* make sure that the objects inside are stacked on top of each other */
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+}
+
+.comment-section, .comment, .comment-content {
+    /* a very long comment text should wrap around instead of stretching the page */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+/* container for list of comments */
+.comments-container {
+    /*
+    these settings make sure that the comment list does not overflow
+    but instead show a scrollbar
+    */
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+/* a single comment */
+.comment {
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    background-color: #f2f2f2;
+    /* comment contains text and delete button */
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Aligns children vertically in the center */
+    position: relative;
+}
+
+
+/* show delete button on hover */
+.comment:hover .delete-comment {
+    visibility: visible;
+}
+
+.comment:hover {
+    background-color: #eaeaea;
+}
+
+.my-comment {
+    border-radius: 20px 5px 20px 20px;
+    background-color: #c6dca1;
+}
+
+.my-comment:hover {
+    background-color: #b9d58a;
+}
+
+.other-comment {
+    border-radius: 5px 20px 20px 20px;
+}
+
+/* comment info and delete button */
+.comment small {
+    color: slategrey;
+}
+
+/* text inside of comment */
+.comment-content {
+    flex: 1;
+    min-width: 0;
+    word-wrap: break-word;
+}
+
+/* delete button for comment*/
+.delete-comment {
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 10px;
+    /* hidden by default */
+    visibility: hidden;
+}
+
+.delete-comment i:active {
+    /* delete button black on click */
+    color: black;
+}
+
+/* --- comment writing area --- */
+
+/* complete form for writing comments including textarea and button */
+.comment-form form {
+    /* comment form should also be stacked */
+    display: flex;
+    flex-direction: column;
+    margin-top: 25px;
+}
+
+/* text area for writing comments */
+.comment-form textarea {
+    margin-bottom: 15px;
+}
+
+/* when typing inside of textarea */
+.comment-form textarea:focus {
+    border-color: #c2c2c2;
+    outline: none;
+}
+
+/* placeholder text before input is received */
+.comment-form textarea::placeholder {
+    color: #cfcfcf;
+    font-size: 14px;
+}
+
+/* --- scrollbar styling --- */
+
+/* scrollbar track */
+.comments-container::-webkit-scrollbar-track {
+    background-color: #f2f2f2;
+    border-radius: 10px;
+}
+
+/* Styling the scrollbar itself (width, etc.) */
+.comments-container::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+/* scrollbar cursor (thumb) */
+.comments-container::-webkit-scrollbar-thumb {
+    background-color: #dfdfdf;
+    border-radius: 10px;
+}
+
+/* scrollbar cursor clicked */
+.comments-container::-webkit-scrollbar-thumb:active {
+    background-color: #c2c2c2;
+}

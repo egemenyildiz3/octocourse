@@ -1,0 +1,47 @@
+<div class="info">
+    <label for="id_title">Title:</label>
+    {{ form.title }}
+</div>
+<div class="info">
+    <label for="id_due_date">Due Date:</label>
+    {{ form.due_date }}
+</div>
+<div class="info">
+    <label for="id_description">Description:</label>
+    {{ form.description }}
+</div>
+<div class="info">
+    <label for="id_total_points">Total points:</label>
+    {{ form.total_points }}
+</div>
+<div class="info">
+    <label for="id_is_individual">Is individual?</label>
+    {{ form.is_individual }}
+</div>
+<div class="info">
+    <label for="id_server_check_interval">Server Check Interval</label>
+    {{ form.server_check_interval }}
+</div>
+<div class="info">
+    <label for="id_tags">Tags:</label>
+    <div>
+        {% if assignment.tags.all %}
+            {% for tag in assignment.tags.all %}
+                <div>{{ tag.to_html }}</div>
+            {% endfor %}
+        {% else %}
+            <p>No tags selected.</p>
+        {% endif %}
+    </div>
+    <label>Edit Selection:</label>
+    <div>{{ form.tags }}</div>
+</div>
+<div class="info" id="assignmentUnitsContainer">
+    <label><h3>Assignment Units:</h3></label>
+    {% for unit in assignment_units %}
+        <div class="assignmentUnit" data-unit-id="{{ unit.id }}">
+            <input type="hidden" name="units-{{ forloop.counter0 }}-id" value="{{ unit.id }}">
+            {% include 'assignments/partials/assignment_unit.html' %}
+        </div>
+    {% endfor %}
+</div>

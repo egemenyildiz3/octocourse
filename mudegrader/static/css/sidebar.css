@@ -1,0 +1,121 @@
+/*
+    all styling that is side bar related
+*/
+
+/* sidebar container */
+.sidebar {
+    background-color: #f0f0f0;
+    padding: 20px;
+    grid-row: 2;
+    grid-column: 1;
+    /* sidebar is itself a grid */
+    display: grid;
+    grid-template-rows: 2fr 1fr;
+}
+
+/* project name container */
+#title {
+    background-color: #f0f0f0;
+    grid-column: 1;
+    grid-row: 1;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+}
+
+
+/* pages menu */
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* single menu item */
+.sidebar ul li {
+    padding: 10px;
+    border-radius: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 5px;
+}
+
+/* the current menu tab should always show white */
+.sidebar ul li.active, .sidebar ul li.active:hover {
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid #ccc;
+}
+
+/* menu tab hover */
+.sidebar ul li:hover {
+    border-bottom: 1px solid #ccc;
+    background-color: #eaeaea;
+}
+
+/* menu tab link */
+.sidebar ul li a {
+    display: block;
+    text-decoration: none;
+    color: #333;
+}
+
+/* menu tab link */
+.sidebar ul li a:hover {
+    color: #000;
+    height: 100%;
+    width: 100%;
+}
+
+/* course and user info*/
+.badge {
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    text-align:center;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    text-decoration: none;
+    /*color: blue;*/
+    color: #333;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+    border-bottom: 1px solid #ccc;
+
+
+}
+
+.badge:hover {
+    border-color: #989898;
+    color: black;
+}
+
+
+.log-out-button {
+    background-color: #fa385d;
+    color: white;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 45px;
+    margin-bottom: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+    border-bottom: 1px solid #ccc;
+
+}
+
+
+
+
+
+
+.bottom-left-info {
+    grid-row: 2;
+    grid-column: 1;
+    background-color: #f2f2f2;
+    padding: 25px;
+    border-top: 1px solid #ccc;
+}

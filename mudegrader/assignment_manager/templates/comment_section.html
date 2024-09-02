@@ -1,0 +1,66 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/comment_section.css' %}">
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // js for posting comment when pressing SHIFT + ENTER
+        const commentTextarea = document.querySelector('#id_comment_text');
+        commentTextarea.addEventListener('keydown', function(event) {
+            // check if SHIFT and ENTER are pressed at the same time
+            if (event.shiftKey && event.key === 'Enter') {
+                // stop the browser from doing the default behaviour when we do SHIFT+ENTER
+                event.preventDefault();
+                // submit the comment
+                document.getElementById('form-for-comment').submit();
+            }
+        });
+    });
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this comment?");
+    }
+</script>
+<div class="comment-section">
+    <div class="content-header">
+        <h2>Comments</h2>
+    </div>
+    {% if comments %}
+        {# list of comments #}
+        <div class="comments-container">
+            {% for comment in comments %}
+                {# single comment #}
+                <div class="comment {% if comment.author == request.user %}my-comment{% else %}other-comment{% endif %}">
+                    <div class="comment-content">
+                        {{ comment.comment_text }}
+                        <br>
+
+                        <small>
+                            by
+                            <span style="color: black">{{ comment.author }}</span>
+                            at {{ comment.comment_time }}
+                        </small>
+                    </div>
+                    {# deleting a single comment #}
+                    {% if comment.author == request.user %}
+                        <a href="{% url 'delete_comment' comment.id %}" class="delete-comment" onclick="return confirmDelete();">
+                            {# trash icon for deletion #}
+                            <small><i class="fa-solid fa-trash"></i></small>
+                        </a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No comments yet</p>
+    {% endif %}
+{#    form for comment creation #}
+    <div class="comment-form">
+        <form method="post" id="form-for-comment">
+            {% csrf_token %}
+            {{ comment_form.comment_text }}
+            <div>
+                <button type="submit" class="mude-button safe" >Post</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% load custom_tags %}
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <script>
+        function addSlugValidation(inputId) {
+            var inputElement = document.getElementById(inputId);
+            if (!inputElement) return;  // Exit if no element found
+
+            inputElement.addEventListener('input', function () {
+                const isValid = /^[a-zA-Z0-9\-_]+$/.test(this.value);
+                let validationMessage = 'Please enter only letters, numbers, underscores and hyphens.';
+                this.setCustomValidity(isValid ? '' : validationMessage);
+            });
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    {% block scripts %}
+    {% endblock %}
+    <meta charset="UTF-8">
+    <title>Mude Grader</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/mude_buttons.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/scrollbar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/tables.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="content-login">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</body>
+</html>

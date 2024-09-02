@@ -1,0 +1,10 @@
+<h2>File Previews</h2>
+<p style="font-size: 0.9em; color: gray;">
+    Note: Folders named "hidden" will not be distributed to students or groups.
+</p>
+<div id="fileSystemView" class="styled-file-system">
+    {{ rendered_folder_tree|safe }}
+</div>
+<iframe id="fileViewerIframe" class="styled-iframe" style="width: 100%; height: 600px; border: none;"></iframe>
+<div id="filePreviewDiv" class="styled-preview" style="display: none;"></div>
+<button id="fullScreenButton" class="styled-button">Preview in Full Screen</button>

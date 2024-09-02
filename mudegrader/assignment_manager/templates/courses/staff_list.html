@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="content-box">
+    <div class="content-header">
+        <h1>Staff List for {{ course.course_code }}</h1>
+        <a href="{% url 'course_details' course.id %}" class="mude-button back">Back</a>
+    </div>
+    <div class="scrollable-table">
+        <table>
+            <thead>
+            <tr>
+                <th>Staff Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>GitLab ID</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for staff in staff_members %}
+                <tr>
+                    <td>{{ staff.get_full_name }}</td>
+                    <td>{{ staff.email }}</td>
+                    <td>{{ staff.role }}</td>
+                    <td>
+                        {% if staff.gitlab_id %}
+                            {{ staff.gitlab_id }}
+                        {% else %}
+                            None
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
